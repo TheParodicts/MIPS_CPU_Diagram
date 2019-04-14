@@ -7,7 +7,8 @@ module MicroRegister_Testbench;
     reg clk, reset;
    // reg [6:0] state;
     wire[43:0] StateSignals;
-    Microstore Mstore(out_Mux_StateSlct, reset, StateSignals);
+    wire[6:0] curState; // For testing purposes.
+    Microstore Mstore(StateSignals, curState, reset, out_Mux_StateSlct);
 
 // Control Register Declarations
     wire IRld, PCld, nPCld, RFld, MA, MC, ME, MF, MPA, MP, MR, RW, MOV, MDRld, MARld, Cin, Inv, IncRld;
@@ -18,11 +19,15 @@ module MicroRegister_Testbench;
     wire [6:0] CR;
     wire [1:0] S;
     wire [2:0] N;
-    ControlRegister CReg(StateSignals, clk, IRld, PCld, nPCld,
+    wire [6:0] activeState; // For testing purposes.
+    ControlRegister CReg( IRld, PCld, nPCld,
                             RFld, MA, MB, MC, ME, MF, 
                             MPA, MP, MR, RW, MOV, MDRld, 
                             MARld, OpC, Cin, SSE, OP, CR, 
-                            Inv, IncRld, S, N);
+                            Inv, IncRld, S, N, 
+                            activeState,
+                            StateSignals, clk,
+                            curState);
 
 // State Selection Declarations
     reg moc, cond, dmoc; // can choose on test
@@ -63,7 +68,7 @@ module MicroRegister_Testbench;
     end
 
     initial begin
-        $display("NState| IRld| PCld| nPCld| RFld| MA| MB|  MC| ME| MF| MPA| MP| MR| RW| MOV| MDRld| MARld|   OpC   |  Cin|  SSE|    OP  |     CR   | Inv| IncRld| S|   N  | clk|         time ");
-        $monitor("%d      %b     %b      %b     %b    %b  %b   %b   %b   %b    %b    %b   %b   %b   %b     %b      %b     %b     %b     %b    %b     %b   %b    %b     %b   %b    %b     %d",out_Mux_StateSlct , IRld, PCld, nPCld, RFld, MA, MB,MC, ME, MF, MPA, MP, MR, RW, MOV, MDRld, MARld, OpC, Cin,SSE, OP, CR, Inv, IncRld, S,  N, clk, $time);
+        $display("CState|IRld|PCld|nPCld|RFld|MA|MB|MC|ME|MF|MPA|MP|MR|RW|MOV|MDRld|MARld|  OpC |Cin|SSE| OP |   CR  |Inv|IncRld| S|  N |clk|               time");
+        $monitor("%d     %b    %b     %b    %b   %b  %b %b  %b  %b   %b  %b  %b  %b   %b    %b     %b   %b  %b  %b  %b %b  %b     %b   %b  %b  %b %d",activeState , IRld, PCld, nPCld, RFld, MA, MB,MC, ME, MF, MPA, MP, MR, RW, MOV, MDRld, MARld, OpC, Cin,SSE, OP, CR, Inv, IncRld, S,  N, clk, $time);
     end
 endmodule

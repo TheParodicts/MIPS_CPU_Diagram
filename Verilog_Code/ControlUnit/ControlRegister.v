@@ -1,5 +1,4 @@
-module ControlRegister(input [43:0] currentStateSignals, input clk,
-                        output reg IRld, PCld, nPCld, RFld, MA,
+module ControlRegister( output reg IRld, PCld, nPCld, RFld, MA,
                         output reg[1:0] MB,
                         output reg MC, ME, MF, MPA, MP, MR,
                         output reg RW, MOV, MDRld, MARld, 
@@ -10,7 +9,10 @@ module ControlRegister(input [43:0] currentStateSignals, input clk,
                         output reg [6:0] CR,
                         output reg Inv, IncRld,
                         output reg [1:0] S,
-                        output reg [2:0] N); 
+                        output reg [2:0] N,
+                        output reg [6:0] activeState,
+                        input [43:0] currentStateSignals, input clk,
+                        input [6:0] curState); 
 
 always @ (posedge clk)
     // Update the Status Signals with the batch of input bits.
@@ -40,6 +42,7 @@ always @ (posedge clk)
         IncRld = currentStateSignals[5];
         S = currentStateSignals[4:3];
         N = currentStateSignals[2:0];
+        activeState = curState; // For testing purposes
     end
 endmodule
 
