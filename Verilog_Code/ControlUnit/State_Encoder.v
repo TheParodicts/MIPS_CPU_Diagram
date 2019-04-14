@@ -2,7 +2,7 @@ module Encoder (
   input[31:0] Instruction,
   output [6:0] State_Sel
 );
-  reg[3:0] state_tmp;
+  reg[6:0] state_tmp;
   
   assign State_Sel = state_tmp; 
   
