@@ -57,6 +57,8 @@ endmodule
 //     wire [6:0] CR;
 //     wire [1:0] S;
 //     wire [2:0] N;
+
+//Outdated, need to update for future testing.
 //     ControlRegister CReg(stateSig, clk, IRld, PCld, nPCld,
 //                             RFld, MA, MB, MC, ME, MF, 
 //                             MPA, MP, MR, RW, MOV, MDRld, 

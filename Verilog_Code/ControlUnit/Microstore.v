@@ -34,6 +34,8 @@ endmodule
 //     reg clk, reset;
 //     reg [6:0] state;
 //     wire[43:0] StateSignals;
+
+// Outdated; need to update for future testing.
 //     Microstore Mstore(state, 1'b0, StateSignals);
 
 //     initial begin
