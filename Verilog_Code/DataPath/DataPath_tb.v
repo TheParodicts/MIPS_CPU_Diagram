@@ -4,7 +4,8 @@
 module DataPath_tb;
     wire [31:0] IR, MAR, PC, nPC, DataIn, DataOut;
 
-    wire [6:0] aState, OpC;
+    wire [6:0] aState;
+    wire [5:0] OpC;
     wire RW, MOV, MOC, DMOC;
     reg clk, reset, Cond;
 
@@ -13,7 +14,7 @@ module DataPath_tb;
 
     /// RAM Declarations.
     ram512x8 ram1 (DataOut, MOC, DMOC, RW, MOV,
-                        MAR, DataIn, OpC);   
+                        MAR[8:0], DataIn, OpC);   
 
 
     /// Simulation Parameters.

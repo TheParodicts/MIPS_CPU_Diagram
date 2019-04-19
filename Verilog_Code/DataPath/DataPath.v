@@ -4,8 +4,9 @@
 
 module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, 
                 output RW_o, MOV_o, 
-                output[6:0] aState, OpC_o, 
-                input clk, reset, Cond, MOC, DMOC, DataOut);
+                output[6:0] aState, output [5:0] OpC_o, 
+                input clk, reset, Cond, MOC, DMOC, 
+                input [31:0] DataOut);
                 
 /// Control Unit Declarations.
 /// Required wires
@@ -39,8 +40,8 @@ module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o,
 
 /// Ext. Register Declarations.
     wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out;
-    wire [31:0] MUXP_out, MUXR_out, MUXP_out, MUXE_out;
-    wire [5:0] MUXF_out
+    wire [31:0] MUXP_out, MUXR_out, MUXE_out;
+    wire [5:0] MUXF_out;
 
     reg [31:0] ALU_out = 32'd1;// Left as Reg for testing purposes for now.
 
@@ -50,10 +51,10 @@ module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o,
     Registers MAR(MAR_out, MUXR_out, MARld, clk);
 
 /// Muxes Declarations.
-    MUX_2x1_32b MUXP(MUXP_out, ALU_out, nPC_Adder_out, MP);
-    MUX_2x1_32b MUXE(MUXE_out, DataOut, ALU_out, ME);
-    MUX_2x1_32b MUXR(MUXR_out, ALU_out, PC_out, MR);
+    Mux_2x1_32b MUXP(MUXP_out, ALU_out, nPC_Adder_out, MP);
+    Mux_2x1_32b MUXE(MUXE_out, DataOut, ALU_out, ME);
+    Mux_2x1_32b MUXR(MUXR_out, ALU_out, PC_out, MR);
 
-    MUX_2x1_6b MUXF(MUXF_out, OpC, IR, MF);
+    Mux_2x1_6b MUXF(MUXF_out, OpC, IR[31:26], MF);
 
 endmodule
