@@ -72,10 +72,10 @@ module ControlUnit_tb;
 
 /// Displays
     initial begin
-        $display("CState|IRld|PCld|nPCld|RFld|MA|MB|MC|ME|MF|MPA|MP|MR|RW|MOV|MDRld|MARld|  OpC |Cin|SSE| OP |               time");
+        $display("CState|IRld|PCld|nPCld|RFld|MA|MB|MC|ME|MF|MPA|MP|MR|RW|MOV|MDRld|MARld|  OpC |Cin|SSE| OP |                time|                 IR");
     end 
     always @(negedge clk) begin
-            $display("%d     %b    %b     %b    %b   %b  %b %b  %b  %b   %b  %b  %b  %b   %b    %b     %b   %b  %b  %b  %b %d",
-                        activeState , IRld, PCld, nPCld, RFld, MA, MB,MC, ME, MF, MPA, MP, MR, RW, MOV, MDRld, MARld, OpC, Cin,SSE, OP,  $time);
+            $display("%d     %b    %b     %b    %b   %b  %b %b  %b  %b   %b  %b  %b  %b   %b    %b     %b   %b  %b  %b  %b %d  %b",
+                        activeState , IRld, PCld, nPCld, RFld, MA, MB,MC, ME, MF, MPA, MP, MR, RW, MOV, MDRld, MARld, OpC, Cin,SSE, OP,  $time, IR);
     end
 endmodule
