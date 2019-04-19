@@ -43,7 +43,7 @@ module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o,
     wire [31:0] MUXP_out, MUXR_out, MUXE_out;
     wire [5:0] MUXF_out;
 
-    reg [31:0] ALU_out = 32'd1;// Left as Reg for testing purposes for now.
+    reg [31:0] ALU_out = 32'd0;// Left as Reg for testing purposes for now.
 
     Registers PC(PC_out, nPC_out, PCld, clk);
     Registers nPC(nPC_out, MUXP_out, nPCld, clk);

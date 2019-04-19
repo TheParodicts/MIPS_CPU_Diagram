@@ -162,6 +162,6 @@ module ram512x8 (output reg [31:0] DataOut, output reg MOC, output reg DMOC=1'b0
                 //8bits (byte)
                 6'b101000: Mem[Address]= DataIn[7:0]; 
             endcase
-    #1 MOC =1'b1; //Set MOC as done.
+    #3 MOC =1'b1; //Set MOC as done.
 end
 endmodule

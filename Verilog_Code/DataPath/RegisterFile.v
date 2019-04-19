@@ -164,54 +164,54 @@ module RegisterFile (output [31:0] data_mux_A, data_mux_B,
 
 // ---------------- Modulo de Prueba ------------------------------------
 
-module test; 
-    wire [31:0] data_mux_A, data_mux_B;      // output from multiplexers
-    reg [31:0] data;                        // data to be written to a register
-    reg [4:0] select_reg_A, select_reg_B;    // select register on multiplexer A and B
-    reg [4:0] write_reg;                     // select which register to write data 
-    reg Ld;                                 // load to Decoder
-    reg Clk;                                 // clock for registers
+// module test; 
+//     wire [31:0] data_mux_A, data_mux_B;      // output from multiplexers
+//     reg [31:0] data;                        // data to be written to a register
+//     reg [4:0] select_reg_A, select_reg_B;    // select register on multiplexer A and B
+//     reg [4:0] write_reg;                     // select which register to write data 
+//     reg Ld;                                 // load to Decoder
+//     reg Clk;                                 // clock for registers
 
-    RegisterFile regF (data_mux_A, data_mux_B,  data, select_reg_A, select_reg_B, write_reg, Ld, Clk);
+//     RegisterFile regF (data_mux_A, data_mux_B,  data, select_reg_A, select_reg_B, write_reg, Ld, Clk);
 
-    initial #135 $finish;
-    initial begin
-        Clk = 1'b0;
-        Ld = 1'b1;
-        forever #1 Clk = ~Clk;
-    end
-    initial begin
-        write_reg = 5'b00000;   // selection of register to write, from decoder
-        repeat (64) #2 write_reg = write_reg + 5'b00001;  //changes register where to store data
-    end
-    initial begin
-        data = 32'd0;  // data to be stored in registers
-        repeat (64) #2 data = data + 32'd1;
-    end
-    initial fork
-        #129 $display ("|C|          |Data|      |A|          |out A|");
-        #129 write_reg = 5'd0; 
-        #129 data = 32'd15;
-        #129 select_reg_A = 5'd0;
+//     initial #135 $finish;
+//     initial begin
+//         Clk = 1'b0;
+//         Ld = 1'b1;
+//         forever #1 Clk = ~Clk;
+//     end
+//     initial begin
+//         write_reg = 5'b00000;   // selection of register to write, from decoder
+//         repeat (64) #2 write_reg = write_reg + 5'b00001;  //changes register where to store data
+//     end
+//     initial begin
+//         data = 32'd0;  // data to be stored in registers
+//         repeat (64) #2 data = data + 32'd1;
+//     end
+//     initial fork
+//         #129 $display ("|C|          |Data|      |A|          |out A|");
+//         #129 write_reg = 5'd0; 
+//         #129 data = 32'd15;
+//         #129 select_reg_A = 5'd0;
 
-        join
-    initial begin
-        select_reg_A = 5'b00000; // select mux A
-        repeat (64) #2 select_reg_A = select_reg_A + 5'b00001;
-    end
-     initial begin
-        select_reg_B = 5'b00000;    //select mux B
-        repeat (64) #2 select_reg_B = select_reg_B + 5'b00001;
-    end
+//         join
+//     initial begin
+//         select_reg_A = 5'b00000; // select mux A
+//         repeat (64) #2 select_reg_A = select_reg_A + 5'b00001;
+//     end
+//      initial begin
+//         select_reg_B = 5'b00000;    //select mux B
+//         repeat (64) #2 select_reg_B = select_reg_B + 5'b00001;
+//     end
 
-    initial begin 
-	// write to reg = señal (decoder) que indica a que registro se va a guardar la data
-	// data = la data que se va a guardar en un registro
-	// select_reg_mux_A / select_reg_mux_B = señal indica que registro se selecciona del multiplexer A o B, respectivamente
-	// out_mux_A / out_mux_B = output del multiplexer correspondiente
+//     initial begin 
+// 	// write to reg = señal (decoder) que indica a que registro se va a guardar la data
+// 	// data = la data que se va a guardar en un registro
+// 	// select_reg_mux_A / select_reg_mux_B = señal indica que registro se selecciona del multiplexer A o B, respectivamente
+// 	// out_mux_A / out_mux_B = output del multiplexer correspondiente
 
-        $display (" C         data    select_reg_mux_A     A    select_reg_mux_B        B     Clk");  
-        $monitor (" %d    %d         %d     %d      %d         %d          %d    ",  write_reg, data, select_reg_A, data_mux_A, select_reg_B, data_mux_B, Clk);      
-    end 
+//         $display (" C         data    select_reg_mux_A     A    select_reg_mux_B        B     Clk");  
+//         $monitor (" %d    %d         %d     %d      %d         %d          %d    ",  write_reg, data, select_reg_A, data_mux_A, select_reg_B, data_mux_B, Clk);      
+//     end 
 
-endmodule
+// endmodule
