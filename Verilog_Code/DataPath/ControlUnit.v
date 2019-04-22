@@ -18,8 +18,8 @@ module ControlUnit( output IRld, PCld, nPCld, RFld, MA,
                         
 // Microstore declarations
     wire[43:0] StateSignals;
-    wire[6:0] curState; // For testing purposes.
-    Microstore Mstore(StateSignals, curState, reset, out_Mux_StateSlct);
+    wire[6:0] nextState; // For testing purposes.
+    Microstore Mstore(StateSignals, nextState, reset, out_Mux_StateSlct);
 
 // Control Register Declarations
     wire Inv, IncRld;
@@ -33,7 +33,7 @@ module ControlUnit( output IRld, PCld, nPCld, RFld, MA,
                             Inv, IncRld, S, N, 
                             activeState,
                             StateSignals, clk,
-                            curState);
+                            nextState);
 
 // State Selection Declarations
     reg [6:0]  HC1 = 7'd1;
@@ -52,9 +52,9 @@ module ControlUnit( output IRld, PCld, nPCld, RFld, MA,
     Encoder IRencodedOut(IR, encodedOut);
 
     // For debugging.
-    // initial begin
-    //     $display("IR,                                 CR,  Inv, IncRld, S,  N, active state, nextState, encodedOut");
-    //     $monitor("%b  %b  %b      %b  %b  %b     %d       %d          %d", IR, CR, Inv, IncRld, S, N, curState, out_Mux_StateSlct, encodedOut);
-    // end
+    initial begin
+        $display("IR,                                 CR,  Inv, IncRld, S,  N, active state, nextState, encodedOut  Clk");
+        $monitor("%b  %b  %b      %b  %b  %b     %d       %d          %d      %b", IR, CR, Inv, IncRld, S, N, nextState, out_Mux_StateSlct, encodedOut, clk);
+    end
 
 endmodule

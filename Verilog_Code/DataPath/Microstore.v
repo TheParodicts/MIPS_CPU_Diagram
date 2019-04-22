@@ -2,14 +2,14 @@ module Microstore(output reg [43:0] currentStateSignals, output reg[6:0] activeS
                     input reset, input [6:0] currentState);
 always @ (currentState, reset)
     if (reset) begin
-        currentStateSignals = 44'b00100110000000000000000000001000000000000001;
+        currentStateSignals = 44'b00100110000000000000000000001000000000100001;
         activeState = 7'd0; // For testing purposes.
         end
     else
         begin
             activeState = currentState; // For testing purposes.
             case(currentState)
-                7'd0: currentStateSignals = 44'b00100110000000000000000000001000000000000001;
+                7'd0: currentStateSignals = 44'b00100110000000000000000000001000000000100001;
                 7'd1: currentStateSignals = 44'b01100000000100000000000000000000000000100011;
                 7'd2: currentStateSignals = 44'b00000000000010001000000000000000000000100011;
                 7'd3: currentStateSignals = 44'b00000000000001100100011000000000000000100011;
@@ -23,7 +23,7 @@ always @ (currentState, reset)
                 7'd11: currentStateSignals = 44'b00100100000000000000000001000100000100100010;
                 // Default state is Reset (0) state.
                 default: begin
-                    currentStateSignals = 44'b00100110000000000000000000001000000000000001;
+                    currentStateSignals = 44'b00100110000000000000000000001000000000100001;
                     activeState = 7'd0; // For testing purposes.
                 end
             endcase
