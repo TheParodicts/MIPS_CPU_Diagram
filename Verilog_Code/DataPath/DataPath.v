@@ -29,6 +29,7 @@ module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o,
     assign RW_o = RW;
     assign MOV_o = MOV;
     assign OpC_o = OpC;
+    assign MR_0 = MR;
 
 
 /// Control Unit Declaration
@@ -57,4 +58,7 @@ module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o,
 
     Mux_2x1_6b MUXF(MUXF_out, OpC, IR[31:26], MF);
 
+    // always @(*)begin
+    //     $monitor(" %b  %b  %b  %b", MAR_out, MUXR_out, MARld, clk);
+    //     end
 endmodule

@@ -52,9 +52,9 @@ module ControlUnit( output IRld, PCld, nPCld, RFld, MA,
     Encoder IRencodedOut(IR, encodedOut);
 
     // For debugging.
-    initial begin
-        $display("IR,                                 CR,  Inv, IncRld, S,  N, active state, nextState, encodedOut  Clk");
-        $monitor("%b  %b  %b      %b  %b  %b     %d       %d          %d      %b", IR, CR, Inv, IncRld, S, N, nextState, out_Mux_StateSlct, encodedOut, clk);
-    end
+    // initial begin
+    //     $display("IR,                                 CR,  Inv, IncRld, S,  N, active state, nextState, encodedOut  Clk");
+    //     $monitor("%b  %b  %b      %b  %b  %b     %d       %d          %d      %b", IR, CR, Inv, IncRld, S, N, nextState, out_Mux_StateSlct, encodedOut, clk);
+    // end
 
 endmodule

@@ -30,6 +30,9 @@ module Next_State_Address_Selector(output reg [1:0]  M,  input sts, input[2:0] N
             3'b110:
                 if(!sts) M <= 2'b01; //Hard Coded 1
                 else M <= 2'b11; //Adder
+            3'b111:
+                if(!sts) M <= 2'b10; // Control Register
+                else M <= 2'b11; // Adder/incrementer
         endcase
     endmodule   
 
