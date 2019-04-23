@@ -52,7 +52,7 @@ module IncReg_Adder(output reg [6:0] N_state, input[6:0] C_state);
     endmodule
 
 module Incrementer_Reg(output reg [6:0] state, input[6:0] inc_state, input Ld, clk); 
-    always @ (posedge clk)
+    always @ (negedge clk)
         if(Ld)
             state <= inc_state; 
     endmodule

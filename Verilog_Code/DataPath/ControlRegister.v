@@ -14,7 +14,7 @@ module ControlRegister( output reg IRld, PCld, nPCld, RFld, MA,
                         input [43:0] currentStateSignals, input clk,
                         input [6:0] curState); 
 
-always @ (posedge clk)
+always @ (negedge clk)
     // Update the Status Signals with the batch of input bits.
     begin
         IRld = currentStateSignals[43];

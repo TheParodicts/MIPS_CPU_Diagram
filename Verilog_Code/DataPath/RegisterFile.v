@@ -127,7 +127,9 @@ module RegisterFile (output [31:0] data_mux_A, data_mux_B,
                 r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21, r22, 
                 r23, r24, r25, r26, r27, r28, r29, r30, r31);
 
-    Registers R0 (r0, 32'h00000000, dec_enable_reg[0], Clk ); //hardcoded to have 0
+    Registers R0 (r0, 32'h00000000, Clk, Clk ); //hardcoded to have 0
+    // Hacked the enable to match with the Clk so it always outputs 0.
+
     Registers R1 (r1, data, dec_enable_reg[1], Clk );
     Registers R2 (r2,  data, dec_enable_reg[2], Clk );
     Registers R3 (r3,  data, dec_enable_reg[3], Clk );

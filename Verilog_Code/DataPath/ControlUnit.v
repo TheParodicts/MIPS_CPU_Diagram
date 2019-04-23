@@ -15,7 +15,8 @@ module ControlUnit( output IRld, PCld, nPCld, RFld, MA,
                         input clk, reset,
                         input [31:0] IR,
                         input MOC, Cond, DMOC);
-                        
+
+wire [6:0] out_Mux_StateSlct, Incrementer, out_adder, encodedOut;
 // Microstore declarations
     wire[43:0] StateSignals;
     wire[6:0] nextState; // For testing purposes.
@@ -37,7 +38,7 @@ module ControlUnit( output IRld, PCld, nPCld, RFld, MA,
 
 // State Selection Declarations
     reg [6:0]  HC1 = 7'd1;
-    wire [6:0] out_Mux_StateSlct, Incrementer, out_adder, encodedOut;
+    
     wire in_inv, Sts;
     wire [1:0] M; 
 
