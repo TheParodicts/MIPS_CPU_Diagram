@@ -5,23 +5,31 @@ module ALU(
   input Sign,
   output [31:0] ALU_Out,
   output Zero, 
-  output Overflow, 
-  output Carryout
+  output Overflow
 );
   
-  reg [31:0] Lo;
-  reg [31:0] Hi;
+  wire [31:0] Lo;
+  wire [31:0] Hi;
+  wire [32:0] A_ext, B_ext;
   reg [63:0] ALU_Result;
   
   wire tmp;
   
-  assign ALU_Out = (Sign == 1) ?  $signed(ALU_Result[31:0]) : ALU_Result[31:0];
-  assign tmp = ALU_Result[32];
-  assign Carryout = (Sign == 0) ? tmp : 1'b0;
-  assign Overflow = 1'b0; // PLaceholder cuz i cant figure out the correct expression
+  Overflow_Detector ovr(
+    .A_ext(A_ext), 
+    .B_ext(B_ext), 
+    .op(ALU_Sel), 
+    .sign(Sign),
+    .overflow(Overflow)
+  );
+
+  assign A_ext = (Sign) ? {A[31], A} : {1'b0, A};
+  assign B_ext = (Sign) ? {B[31], B} : {1'b0, B};
   
   assign Lo = ALU_Result[31:0];
   assign Hi = ALU_Result[63:32];
+  assign ALU_Out = ALU_Result[31:0];
+  
   assign Zero = ~(|ALU_Result);
 
   always @(*)
@@ -29,10 +37,10 @@ module ALU(
       
       case(ALU_Sel)
         4'h0:
-          ALU_Result = (Sign) ? $signed(A) + $signed(B) : A + B;
+          ALU_Result = A + B + CarryIn;
         
         4'h1:
-          ALU_Result = (Sign) ? $signed(A) - $signed(B) : A - B;
+          ALU_Result = A - B;
         
         4'h2:
           ALU_Result = A * B;
@@ -44,10 +52,10 @@ module ALU(
           ALU_Result = A >> 1;
         
         4'h6: // Arith Shift left
-          ALU_Result = (Sign) ? $signed(A) <<< 1 : A <<< 1; // doesnt seem to work with both signed and unsigned
+          ALU_Result = {A[30:0], A[0]};
             
         4'h7: // Arith shift right
-          ALU_Result = (Sign) ? $signed(A) >>> 1 : A >>> 1; // doesnt seem to work with both signed and unsigned
+          ALU_Result = {A[31], A[31:1]}; 
           
         4'h8:
           ALU_Result = A & B;
@@ -68,7 +76,7 @@ module ALU(
           ALU_Result = ~(A ^ B);
         
         4'hE:
-          ALU_Result = (A > B) ? 32'd1 : 32'd0;
+          ALU_Result = (A < B) ? 32'd1 : 32'd0;
         
         4'hF:
           ALU_Result = (A == B) ? 32'd1 : 32'd0;
@@ -78,5 +86,51 @@ module ALU(
       endcase
     end
   
+endmodule
+
+module Overflow_Detector(
+  input [31:0] A_ext, B_ext,
+  input [3:0] op,
+  input sign,
+  output overflow
+);
+  
+  reg [32:0] temp_out;
+  reg carr_out;
+  
+  reg ovrf_temp;
+  
+  assign overflow = ovrf_temp;
+ 
+  always @(*) begin
+    case(op)
+      4'h0:
+        begin
+          temp_out = {0'b0, A_ext} + {0'b0, B_ext};
+          carr_out = temp_out[32];
+          
+          if(sign) begin
+            ovrf_temp = ~(A_ext[31] ^ B_ext[31]) ^ temp_out[31];
+          end else begin
+            ovrf_temp = carr_out;
+          end
+        end
+      
+      4'h1:
+        begin
+          temp_out = {0'b0, A_ext} - {0'b0, B_ext};
+          carr_out = temp_out[32];
+          
+          if(sign) begin
+            ovrf_temp = ~(A_ext[31] ^ B_ext[31]) ^ temp_out[31];
+          end else begin
+            ovrf_temp = carr_out;
+          end
+        end
+      
+      default: ovrf_temp = 0;
+      
+    endcase
+  end
 endmodule
           
