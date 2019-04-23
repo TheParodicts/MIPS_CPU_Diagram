@@ -10,22 +10,18 @@ module ALU(
   
   wire [31:0] Lo;
   wire [31:0] Hi;
-  wire [32:0] A_ext, B_ext;
   reg [63:0] ALU_Result;
   
   wire tmp;
   
   Overflow_Detector ovr(
-    .A_ext(A_ext), 
-    .B_ext(B_ext), 
+    .A_ext(A), 
+    .B_ext(B), 
     .op(ALU_Sel), 
     .sign(Sign),
     .overflow(Overflow)
   );
 
-  assign A_ext = (Sign) ? {A[31], A} : {1'b0, A};
-  assign B_ext = (Sign) ? {B[31], B} : {1'b0, B};
-  
   assign Lo = ALU_Result[31:0];
   assign Hi = ALU_Result[63:32];
   assign ALU_Out = ALU_Result[31:0];
