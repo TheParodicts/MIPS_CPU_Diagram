@@ -1,6 +1,8 @@
 `include "ControlUnit.v"
 `include "RegisterFile.v"
 `include "muxes.v"
+`include "alu.v"
+`include "Sign_Extender.v"
 
 module nPC_adder(output reg [31:0] adder_out, input [31:0] nPC);
     always @ (nPC)
@@ -55,7 +57,8 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     
     wire [4:0] MUXC_out, MUXPA_out;
 
-    reg [31:0] ALU_out = 32'd0;// Left as Reg for testing purposes for now.
+    //reg [31:0] ALU_out = 32'd0;// Left as Reg for testing purposes for now.
+    wire [31:0] ALU_out;
 
     Registers PC(PC_out, nPC_out, PCld, clk);
     Registers nPC(nPC_out, MUXP_out, nPCld, clk);
@@ -76,6 +79,7 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     Mux_2x1_5b MUXC(MUXC_out, IR[15:11], IR[20:16], MC);
     Mux_2x1_5b MUXPA(MUXPA_out, IR[20:16], IR[25:21], MPA);
 
+    
 //Register File Declarations.
     
     wire [31:0] PA_regFile, PB_regFile;
@@ -83,6 +87,22 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     //change RegData for Aluout and wtoReg to MUXC_out after testing
     RegisterFile registerFile(PA_regFile, PB_regFile, ALU_out, 
                             MUXPA_out, IR[25:21], MUXC_out, RFld, clk);
+
+// ALU Declarations.
+    wire [31:0] MUXA_out;
+    wire [31:0] MUXB_out;
+    wire [31:0] SE_out;
+
+    wire Z_flag, OvrF_flag;
+
+    Sign_Extender SE(SE_out, IR[15:0], SSE);
+
+    Mux_2x1_32b MUXA(MUXA_out, PC_out, PA_regFile, MA);
+    Mux_4x1_32b MUXB(MUXB_out, MDR_out, PB_regFile, SE_out, 31'b0, MB);
+
+
+    // Missing: ALU Sign input, SE case select, CLZ, CLO, TESTING
+    ALU ALU(ALU_out, MUXA_out, MUXB_out, OP, Cin, 1'b0, Z_flag, OvrF_flag);
 
     // always @(*)begin
     //     $monitor(" %b  %b  %b  %b", MAR_out, MUXR_out, MARld, clk);
