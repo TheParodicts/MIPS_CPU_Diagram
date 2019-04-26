@@ -95,7 +95,7 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
 
     wire Z_flag, OvrF_flag;
 
-    Sign_Extender SE(SE_out, IR[15:0], /* 26-bit input */, SSE);
+    Sign_Extender SE(SE_out, IR, SSE);
 
     Mux_2x1_32b MUXA(MUXA_out, PC_out, PA_regFile, MA);
     Mux_4x1_32b MUXB(MUXB_out, MDR_out, PB_regFile, SE_out, 31'b0, MB);
