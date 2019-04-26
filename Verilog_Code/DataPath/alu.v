@@ -11,6 +11,10 @@ module ALU(
   wire [31:0] Lo;
   wire [31:0] Hi;
   reg [63:0] ALU_Result;
+  reg [15:0] val16;
+  reg [7:0] val8;
+  reg [3:0] val4;
+
   
   wire tmp;
   
@@ -42,7 +46,7 @@ module ALU(
           ALU_Result = A * B;
 
         4'h3:
-          ALU_Result = {B[15:0], 16'b0}; // LUI imm16 of input B extendended at the right with zeroes
+          ALU_Result = {32'b0, {B[15:0], 16'b0}}; // LUI imm16 of input B extendended at the right with zeroes
         
         4'h4:
           ALU_Result = A << 1;
@@ -68,11 +72,47 @@ module ALU(
         4'hB:
           ALU_Result = ~(A | B);
         
-        4'hC:
-          ALU_Result = ; // CLZ
+        4'hC: // Count Leading Zero's
+          begin
+            if(A[31:0] == 32'b0) begin
+              ALU_Result = 32;
+            end else begin
+              ALU_Result[4] = (A[31:16] == 16'b0);
+              val16 = ALU_Result[4] ? A[15:0] : A[31:16];
+
+              ALU_Result[3] = (val16[15:8] == 8'b0);
+              val8 = ALU_Result[3] ? val16[7:0] : val16[15:8];
+
+              ALU_Result[2] = (val8[7:4] == 4'b0);
+              val4 = ALU_Result[2] ? val8[3:0] : val8[7:4];
+
+              ALU_Result[1] = (val4[3:2] == 2'b0);
+              ALU_Result[0] = ALU_Result[1] ? ~val4[1] : ~val4[3];
+
+              ALU_Result[63:5] = 0;
+            end
+          end
         
-        4'hD:
-          ALU_Result = ; // CLO
+        4'hD: // Count Leading One's
+          begin  
+            if(A[31:0] == 32'b11111111111111111111111111111111) begin
+              ALU_Result = 32;
+            end else begin
+              ALU_Result[4] = (A[31:16] == 16'b1111111111111111);
+              val16 = ALU_Result[4] ? A[15:0] : A[31:16];
+
+              ALU_Result[3] = (val16[15:8] == 8'b11111111);
+              val8 = ALU_Result[3] ? val16[7:0] : val16[15:8];
+
+              ALU_Result[2] = (val8[7:4] == 4'b1111);
+              val4 = ALU_Result[2] ? val8[3:0] : val8[7:4];
+
+              ALU_Result[1] = (val4[3:2] == 2'b11);
+              ALU_Result[0] = ALU_Result[1] ? val4[1] : val4[3];
+
+              ALU_Result[63:5] = 0;
+            end
+          end
         
         4'hE:
           ALU_Result = (A < B) ? 32'd1 : 32'd0;
@@ -132,4 +172,3 @@ module Overflow_Detector(
     endcase
   end
 endmodule
-          
