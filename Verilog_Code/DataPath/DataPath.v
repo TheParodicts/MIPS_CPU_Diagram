@@ -95,13 +95,13 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
 
     wire Z_flag, OvrF_flag;
 
-    Sign_Extender SE(SE_out, IR[15:0], SSE);
+    Sign_Extender SE(SE_out, IR[15:0], /* 26-bit input */, SSE);
 
     Mux_2x1_32b MUXA(MUXA_out, PC_out, PA_regFile, MA);
     Mux_4x1_32b MUXB(MUXB_out, MDR_out, PB_regFile, SE_out, 31'b0, MB);
 
 
-    // Missing: ALU Sign input, SE case select, CLZ, CLO, TESTING
+    // Missing: ALU Sign input, SE case select, TESTING
     ALU ALU(ALU_out, MUXA_out, MUXB_out, OP, Cin, 1'b0, Z_flag, OvrF_flag);
 
     // always @(*)begin
