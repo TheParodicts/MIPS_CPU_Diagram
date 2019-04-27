@@ -46,10 +46,10 @@ always @ (negedge clk)
         N = currentStateSignals[2:0];
         activeState = curState; // For testing purposes
     end
-        initial begin
-        $display("clk, IRld, PCld, nPCld, RFld, MA, MB,  MC, ME, MF, MPA, MP, MR, RW, MOV, MDRld, MARld,   OpC,     Cin,  SSE,    OP,     CR,    Inv, IncRld,   S,   N ");
-        $monitor("%b     %b      %b     %b     %b     %b  %b   %b   %b   %b    %b    %b   %b   %b   %b      %b    %b      %b     %b    %b     %b   %b   %b    %b        %b  %b", clk, IRld, PCld, nPCld, RFld, MA, MB,MC, ME, MF, MPA, MP, MR, RW, MOV, MDRld, MARld, OpC, Cin,SSE, OP, CR, Inv, IncRld, S,  N );
-    end
+    //     initial begin
+    //     $display("clk, IRld, PCld, nPCld, RFld, MA, MB,  MC, ME, MF, MPA, MP, MR, RW, MOV, MDRld, MARld,   OpC,     Cin,  SSE,    OP,     CR,    Inv, IncRld,   S,   N ");
+    //     $monitor("%b     %b      %b     %b     %b     %b  %b   %b   %b   %b    %b    %b   %b   %b   %b      %b    %b      %b     %b    %b     %b   %b   %b    %b        %b  %b", clk, IRld, PCld, nPCld, RFld, MA, MB,MC, ME, MF, MPA, MP, MR, RW, MOV, MDRld, MARld, OpC, Cin,SSE, OP, CR, Inv, IncRld, S,  N );
+    // end
 endmodule
 
 // module CR_Testbench;

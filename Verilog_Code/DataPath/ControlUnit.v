@@ -20,7 +20,7 @@ module ControlUnit( output IRld, PCld, nPCld, RFld, MA,
 
 wire [6:0] out_Mux_StateSlct, Incrementer, out_adder, encodedOut;
 // Microstore declarations
-    wire[43:0] StateSignals;
+    wire[44:0] StateSignals;
     wire[6:0] nextState; // For testing purposes.
     Microstore Mstore(StateSignals, nextState, reset, out_Mux_StateSlct);
 

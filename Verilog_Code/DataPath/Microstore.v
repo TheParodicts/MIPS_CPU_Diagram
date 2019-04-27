@@ -9,7 +9,6 @@ always @ (currentState, reset)
         begin
             activeState = currentState; // For testing purposes.
             case(currentState)
-            // Not sure what the issue with the bits are.
                 7'd0: currentStateSignals = 45'b001001100000000000000000000001000000000100001;
                 7'd1: currentStateSignals = 45'b011000000000100000000000000000000000000100011;
                 7'd2: currentStateSignals = 45'b000000000000010001000000000000000000000100011;
@@ -25,7 +24,7 @@ always @ (currentState, reset)
                 7'd12: currentStateSignals = 45'b001001000000000000000000001000100000100100010;
                 // Default state is Reset (0) state.
                 default: begin
-                    currentStateSignals = 45'b00100110000000000000000000001000000000100001;
+                    currentStateSignals = 45'b001001100000000000000000000001000000000100001;
                     activeState = 7'd0; // For testing purposes.
                 end
             endcase
