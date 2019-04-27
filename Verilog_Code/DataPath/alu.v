@@ -43,8 +43,13 @@ module ALU(
           ALU_Result = A - B;
         
         4'h2:
-          ALU_Result = A * B;
-
+          begin
+            if (B == 32'b0) begin
+          	  ALU_Result = 64'b0;
+            end else begin
+              ALU_Result = A * B;
+            end
+          end
         4'h3:
           ALU_Result = {32'b0, {B[15:0], 16'b0}}; // LUI imm16 of input B extendended at the right with zeroes
         
@@ -145,7 +150,7 @@ module Overflow_Detector(
     case(op)
       4'h0:
         begin
-          temp_out = {0'b0, A_ext} + {0'b0, B_ext};
+          temp_out = {1'b0, A_ext} + {1'b0, B_ext};
           carr_out = temp_out[32];
           
           if(sign) begin
@@ -157,7 +162,7 @@ module Overflow_Detector(
       
       4'h1:
         begin
-          temp_out = {0'b0, A_ext} - {0'b0, B_ext};
+          temp_out = {1'b0, A_ext} - {1'b0, B_ext};
           carr_out = temp_out[32];
           
           if(sign) begin

@@ -98,7 +98,7 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     Sign_Extender SE(SE_out, IR, SSE);
 
     Mux_2x1_32b MUXA(MUXA_out, PC_out, PA_regFile, MA);
-    Mux_4x1_32b MUXB(MUXB_out, MDR_out, PB_regFile, SE_out, 31'b0, MB);
+    Mux_4x1_32b MUXB(MUXB_out, MDR_out, PB_regFile, SE_out, 32'b0, MB);
 
 
     // Missing: ALU Sign input, SE case select, TESTING
