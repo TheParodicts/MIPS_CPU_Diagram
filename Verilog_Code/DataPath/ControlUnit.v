@@ -5,7 +5,9 @@
 
 module ControlUnit( output IRld, PCld, nPCld, RFld, MA,
                         output [1:0] MB,
-                        output MC, ME, MF, MPA, MP, MR,
+                        output MC, ME, MF, 
+                        output [1:0] MPA,
+                        output MP, MR,
                         output RW, MOV, MDRld, MARld, 
                         output [5:0] OpC,
                         output Cin,

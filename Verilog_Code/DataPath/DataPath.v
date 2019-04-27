@@ -18,9 +18,9 @@ module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, out_PA_regFile
 /// Control Unit Declarations.
 /// Required wires
 // Output wires
-    wire IRld, PCld, nPCld, RFld, MA, MC, ME, MF, MPA, MP, MR,
+    wire IRld, PCld, nPCld, RFld, MA, MC, ME, MF, MP, MR,
             RW, MOV, MDRld, MARld,Cin;        
-    wire [1:0] MB;
+    wire [1:0]  MPA, MB;
     wire [5:0] OpC;
     wire [1:0] SSE;
     wire [3:0] OP;
@@ -77,7 +77,7 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     Mux_2x1_6b MUXF(MUXF_out, OpC, IR[31:26], MF);
 
     Mux_2x1_5b MUXC(MUXC_out, IR[15:11], IR[20:16], MC);
-    Mux_2x1_5b MUXPA(MUXPA_out, IR[20:16], IR[25:21], MPA);
+    Mux_3x1_5b MUXPA(MUXPA_out, IR[20:16], IR[25:21], 5'b0, MPA);
 
     
 //Register File Declarations.
@@ -105,6 +105,6 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     ALU ALU(ALU_out, MUXA_out, MUXB_out, OP, Cin, 1'b0, Z_flag, OvrF_flag);
 
     // always @(*)begin
-    //     $monitor(" %b  %b  %b  %b", MAR_out, MUXR_out, MARld, clk);
+    //     $monitor(" %b  %b  %b  %b %b", MAR_out, MUXR_out, MARld, clk, MPA);
     //     end
 endmodule

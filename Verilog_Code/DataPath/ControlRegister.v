@@ -1,6 +1,8 @@
 module ControlRegister( output reg IRld, PCld, nPCld, RFld, MA,
                         output reg[1:0] MB,
-                        output reg MC, ME, MF, MPA, MP, MR,
+                        output reg MC, ME, MF, 
+                        output reg [1:0] MPA,
+                        output reg MP, MR,
                         output reg RW, MOV, MDRld, MARld, 
                         output reg [5:0] OpC,
                         output reg Cin,
@@ -11,22 +13,22 @@ module ControlRegister( output reg IRld, PCld, nPCld, RFld, MA,
                         output reg [1:0] S,
                         output reg [2:0] N,
                         output reg [6:0] activeState,
-                        input [43:0] currentStateSignals, input clk,
+                        input [44:0] currentStateSignals, input clk,
                         input [6:0] curState); 
 
 always @ (negedge clk)
     // Update the Status Signals with the batch of input bits.
     begin
-        IRld = currentStateSignals[43];
-        PCld = currentStateSignals[42];
-        nPCld = currentStateSignals[41];
-        RFld = currentStateSignals[40];
-        MA = currentStateSignals[39];
-        MB = currentStateSignals[38:37];
-        MC = currentStateSignals[36];
-        ME = currentStateSignals[35];
-        MF = currentStateSignals[34];
-        MPA = currentStateSignals[33];
+        IRld = currentStateSignals[44];
+        PCld = currentStateSignals[43];
+        nPCld = currentStateSignals[42];
+        RFld = currentStateSignals[41];
+        MA = currentStateSignals[40];
+        MB = currentStateSignals[39:38];
+        MC = currentStateSignals[37];
+        ME = currentStateSignals[36];
+        MF = currentStateSignals[35];
+        MPA = currentStateSignals[34:33];
         MP = currentStateSignals[32];
         MR = currentStateSignals[31];
         RW = currentStateSignals[30];
@@ -43,6 +45,10 @@ always @ (negedge clk)
         S = currentStateSignals[4:3];
         N = currentStateSignals[2:0];
         activeState = curState; // For testing purposes
+    end
+        initial begin
+        $display("clk, IRld, PCld, nPCld, RFld, MA, MB,  MC, ME, MF, MPA, MP, MR, RW, MOV, MDRld, MARld,   OpC,     Cin,  SSE,    OP,     CR,    Inv, IncRld,   S,   N ");
+        $monitor("%b     %b      %b     %b     %b     %b  %b   %b   %b   %b    %b    %b   %b   %b   %b      %b    %b      %b     %b    %b     %b   %b   %b    %b        %b  %b", clk, IRld, PCld, nPCld, RFld, MA, MB,MC, ME, MF, MPA, MP, MR, RW, MOV, MDRld, MARld, OpC, Cin,SSE, OP, CR, Inv, IncRld, S,  N );
     end
 endmodule
 
@@ -76,9 +82,6 @@ endmodule
 //     #3 stateSig = 44'b00000000010000100000000000000000000000100011; //State 8
 //     end
 
-//     initial begin
-//         $display("clk, IRld, PCld, nPCld, RFld, MA, MB,  MC, ME, MF, MPA, MP, MR, RW, MOV, MDRld, MARld,   OpC,     Cin,  SSE,    OP,     CR,    Inv, IncRld,   S,   N ");
-//         $monitor("%b     %b      %b     %b     %b     %b  %b   %b   %b   %b    %b    %b   %b   %b   %b      %b    %b      %b     %b    %b     %b   %b   %b    %b        %b  %b", clk, IRld, PCld, nPCld, RFld, MA, MB,MC, ME, MF, MPA, MP, MR, RW, MOV, MDRld, MARld, OpC, Cin,SSE, OP, CR, Inv, IncRld, S,  N );
-//     end
+
 
 // endmodule

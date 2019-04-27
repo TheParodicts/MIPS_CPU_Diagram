@@ -14,6 +14,15 @@ module Mux_2x1_5b(output reg [4:0]  out, input [4:0] in_0, in_1, input select);
         endcase
     endmodule
 
+module Mux_3x1_5b(output reg [4:0]  out, input [4:0] in_0, in_1, in_2, input [1:0] select); 
+    always @ (in_0, in_1, select)
+        case(select)
+            2'b00: out <= in_0; 
+            2'b01: out <= in_1;
+            2'b10: out <= in_2;
+        endcase
+    endmodule
+
 module Mux_2x1_6b(output reg [5:0]  out, input [5:0] in_0, in_1, input select); 
     always @ (in_0, in_1, select)
         case(select)
