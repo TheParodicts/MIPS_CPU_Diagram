@@ -40,7 +40,7 @@ module DataPath_tb;
  // 12 up-down clock cycles of #2.
     initial begin
         clk = 1'b0;
-        repeat (52)
+        repeat (150)
         #1 clk = !clk;
     end
 
