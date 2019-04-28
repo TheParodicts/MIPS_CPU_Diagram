@@ -41,6 +41,7 @@ module ram512x8 (output reg [31:0] DataOut, output reg MOC, output reg DMOC=1'b0
  always @ (posedge MOV) // Could cause issues if two sequential instr. come and MOV never goes to low.
     begin 
     MOC=1'b0;//Memory Operation Not Completed
+    // $display("%b %b %d %d %b",ReadWrite, MOV, Address, DataIn, OpCode);
     /*_________________________________________________________________
         READ OPERATIONS
         ===================================================================*/

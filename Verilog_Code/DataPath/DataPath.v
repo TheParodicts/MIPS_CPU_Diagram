@@ -11,7 +11,7 @@ module nPC_adder(output reg [31:0] adder_out, input [31:0] nPC);
 
 module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, out_PA_regFile, out_PB_regFile,  
                 output RW_o, MOV_o, RFld,
-                output[6:0] aState, output [5:0] OpC_o, output [4:0] MA_o,B_o,
+                output[6:0] aState, output [5:0] MUXF_out, output [4:0] MA_o,B_o,
                 input clk, reset, Cond, MOC, DMOC, 
                 input [31:0] DataOut);
                 
@@ -36,7 +36,7 @@ module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, out_PA_regFile
     reg [31:0] DataIn = 32'd3;
     assign RW_o = RW;
     assign MOV_o = MOV;
-    assign OpC_o = OpC;
+    assign OpC_o = MUXF_out;
     assign MR_0 = MR;
     assign out_PA_regFile = PA_regFile;
     assign out_PB_regFile = PB_regFile; 
@@ -105,6 +105,6 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     ALU ALU(ALU_out, MUXA_out, MUXB_out, OP, Cin, 1'b0, Z_flag, OvrF_flag);
 
     // always @(*)begin
-    //     $monitor(" %b  %b  %b  %b %b", nPCld, MUXR_out, MARld, clk, MPA);
+    //     $monitor(" %b  %b  %b  %b", MF, MUXF_out, MOV, clk);
     //     end
 endmodule

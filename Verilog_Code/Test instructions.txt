@@ -1,0 +1,5 @@
+100011 00000 00001 0000000000000100 << load word what's at location 4 in reg 1.
+
+100100 00000 00010 0000000000000001 << load byte unsigned what's at location 1 in reg 1.
+
+000000 00001 00010 00011 00000 100001 << Add R1 t R1 and save to R2
