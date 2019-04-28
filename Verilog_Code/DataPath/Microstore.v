@@ -27,6 +27,8 @@ always @ (currentState, reset)
                 7'd15: currentStateSignals = 45'b000000000100001110000000000000000011110100111;
                 7'd16: currentStateSignals = 45'b000110010010000000000000000000000000000100001;
                 7'd17: currentStateSignals = 45'b000110100000000000000000000000100000000100001;
+                7'd18: currentStateSignals = 45'b000111010001000000000000000000000000000100001;
+
 
 
                 // Default state is Reset (0) state.
