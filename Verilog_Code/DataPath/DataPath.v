@@ -32,16 +32,15 @@ module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, out_PA_regFile
     assign MAR_o = MAR_out;
     assign PC_o = PC_out;
     assign nPC_o = nPC_out;
-    assign DataIn_o = DataIn;
-    reg [31:0] DataIn = 32'd3;
+    assign DataIn_o = MDR_out;
     assign RW_o = RW;
     assign MOV_o = MOV;
     assign OpC_o = MUXF_out;
     assign MR_0 = MR;
     assign out_PA_regFile = PA_regFile;
     assign out_PB_regFile = PB_regFile; 
-    assign MA_o = MUXPA_out;
-    assign B_o = IR[25:21];
+    assign MA_o = MUXPA_out; // this output is for testing - att.Sofia
+    assign B_o = IR[25:21]; // this output is for testing - att.Sofia
 
 
 wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
