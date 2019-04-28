@@ -40,7 +40,7 @@ module ALU(
           ALU_Result = A + B + CarryIn;
         
         4'h1:
-          ALU_Result = A - B;
+          ALU_Result =  A-B; // Not sure how this works, since these should be A = RT and B = RS -> Brian.
         
         4'h2:
           begin
