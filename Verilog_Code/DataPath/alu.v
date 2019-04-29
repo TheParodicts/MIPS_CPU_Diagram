@@ -40,7 +40,7 @@ module ALU(
           ALU_Result = A + B + CarryIn;
         
         4'h1:
-          ALU_Result =  A-B; // Not sure how this works, since these should be A = RT and B = RS -> Brian.
+          ALU_Result =  A-B; 
         
         4'h2:
           begin
@@ -94,9 +94,9 @@ module ALU(
         4'h7: // Arith shift right
           begin
             tmp = A;
-            if (B < 32) begin
+            if (B < 32) begin // This should just be removed; only consider B's last 5 sig bits. 
               for (i = 0; i < B[4:0]; i=i+1) begin
-                tmp = {tmp[31], tmp[31:1]};
+                tmp = {tmp[0], tmp[31:1]}; // MOdified to fix Shifting error. - Brian
               end
               ALU_Result = tmp;
             end else begin
