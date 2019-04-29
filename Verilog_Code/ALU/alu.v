@@ -1,5 +1,6 @@
 module ALU(
   output [31:0] ALU_Out,
+  output [31:0] Hi_out, Lo_out,
   input [31:0] A,B, // ALU 32-bit inputs
   input [3:0] ALU_Sel, //ALU 4-bit selection
   input CarryIn, 
@@ -7,14 +8,13 @@ module ALU(
   output Zero, 
   output Overflow
 );
-  
-  wire [31:0] Lo;
-  wire [31:0] Hi;
+
   reg [63:0] ALU_Result;
+  reg [31:0] Hi, Lo;
   reg [15:0] val16;
   reg [7:0] val8;
   reg [3:0] val4;
-  reg[31:0] tmp;
+  reg [31:0] tmp;
 
   integer i;
   
@@ -26,8 +26,8 @@ module ALU(
     .overflow(Overflow)
   );
 
-  assign Lo = ALU_Result[31:0];
-  assign Hi = ALU_Result[63:32];
+  assign Lo_out = Lo;
+  assign Hi_out = Hi;
   assign ALU_Out = ALU_Result[31:0];
   
   assign Zero = ~(|ALU_Result);
@@ -48,6 +48,8 @@ module ALU(
           	  ALU_Result = 64'b0;
             end else begin
               ALU_Result = A * B;
+              Hi = ALU_Result[63:32];
+              Lo = ALU_Result[31:0];
             end
           end
         4'h3:
@@ -143,7 +145,13 @@ module ALU(
           end
         
         4'hE:
-          ALU_Result = (A < B) ? 32'd1 : 32'd0; 
+          begin
+            if ((A[31] != B[31]) & (Sign == 1)) begin // If they are of opposite signs
+              ALU_Result = (A[31] > B[31]) ? 64'b1 : 64'b0; // If A is negative
+            end else begin
+              ALU_Result = (A < B) ? 64'b1 : 64'b0; // Unsigned SLT
+            end
+          end
         
         4'hF:
           ALU_Result = (A == B) ? 32'd1 : 32'd0;

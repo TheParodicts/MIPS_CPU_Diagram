@@ -16,13 +16,13 @@ module ALU_tb();
  integer j;
   
  ALU test_unit(
-  ALU_Out, // ALU 8-bit Output
-  A,B,  // ALU 8-bit Inputs                 
-  ALU_Sel,// ALU Selection
-  CarryIn, 
-  Sign,
-  Zero, 
-  Overflow
+  .ALU_Out(ALU_Out), // ALU 8-bit Output
+  .A(A),.B(B),  // ALU 8-bit Inputs                 
+  .ALU_Sel(ALU_Sel),// ALU Selection
+  .CarryIn(CarryIn), 
+  .Sign(Sign),
+  .Zero(Zero), 
+  .Overflow(Overflow)
 );
     initial begin
     // hold reset state for 100 ns.
