@@ -22,11 +22,9 @@ module DataPath_tb;
      integer fi, fo, code, i; 
      reg [31:0] data; 
      reg [8:0] Address;
-      reg [5:0] OpCode;
     initial begin 
         fi = $fopen("RAMdata.txt","r"); 
-        Address = 7'b0000000;
-        OpCode = 6'b101000; 
+        Address = 9'd0;
         while (!$feof(fi)) 
             begin code = $fscanf(fi, "%b", data); 
             ram1.Mem[Address] = data; 
@@ -40,19 +38,35 @@ module DataPath_tb;
  // 12 up-down clock cycles of #2.
     initial begin
         clk = 1'b0;
-        repeat (150)
-        #1 clk = !clk;
+        repeat (150) begin
+            #1 clk = !clk;
+        end
+        
+        fo = $fopen("RAMcontents.txt", "w");
+        Address = 9'd0;
+        $fdisplay(fo,"Address | Contents");
+        repeat(512) begin
+            $fdisplay(fo,"%h = %b", Address, ram1.Mem[Address]); 
+            Address = Address +9'd1;
+        end
+         $fclose(fo);
+      
+
     end
 
     // Start the system with a hard Reset for #2 (while the clock ticks, loading CR).
     initial begin      
-        $display("               IR                             MAR                          PC        nPC cState RW  MOV  MOC clk     MUXA_out     MUXB_out     ALU_out ");
+        $display("               IR                        MAR        PC         nPC ");
+        $monitor("%b %d %d %d", IR, MAR, PC, nPC);
         reset = 1'b1;
         #2 reset = 1'b0;
     end
 
-    always @(clk) begin
-        $display("%b %b %d %d   %d    %b    %b   %b   %b %d  %d    %d", IR, MAR, PC, nPC, aState, RW, MOV, MOC, clk, MUXA_o, MUXB_o, ALU_out);
+    always @(posedge clk) begin
+       // $display("%b %d %d %d", IR, MAR, PC, nPC);
     end
 
 endmodule
+
+// aState, RW, MOV, MOC, clk, MUXA_o, MUXB_o, ALU_out  ->old displays for testing. 
+// cState RW  MOV  MOC clk     MUXA_out     MUXB_out     ALU_out  -> Old headers for testing. 
