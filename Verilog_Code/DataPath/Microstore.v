@@ -50,8 +50,7 @@ always @ (currentState, reset)
 7'd38: currentStateSignals = 45'b000011000001000000000000000111000011000101101;
 7'd39: currentStateSignals = 45'b000011000001000000000000000111100000001101110;
 7'd40: currentStateSignals = 45'b000011000001000000000000000111000011000101101;
-
-
+7'd41: currentStateSignals = 45'b000010100001000000000000000111100011000101101;
 
                 // Default state is Reset (0) state.
                 default: begin
