@@ -37,7 +37,7 @@ module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, out_PA_regFile
     assign MOV_o = MOV;
     assign OpC_o = MUXF_out;
     assign MR_0 = MR;
-    assign out_PA_regFile = PA_regFile;
+    assign out_PA_regFile = MUXA_out;
     assign out_MUXB_o = MUXB_out; 
     assign MA_o = MUXPA_out; // this output is for testing - att.Sofia
     assign B_o = IR[25:21]; // this output is for testing - att.Sofia
