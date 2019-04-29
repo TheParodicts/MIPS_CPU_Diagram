@@ -19,6 +19,9 @@ module Sign_Extender (
         2'b10: // Shift 26 bit Left by 2
           result = unextended[25:0] << 2;
 
+        2'b11:
+          result = {27'b0, unextended[10:6]};
+
         default: result = 32'b0;
       endcase
     end  
