@@ -1,3 +1,4 @@
+`include "alu.v"
 module ALU_tb();
 //Inputs
   reg[31:0] A,B;
@@ -15,20 +16,19 @@ module ALU_tb();
  integer j;
   
  ALU test_unit(
-            A,B,  // ALU 8-bit Inputs                 
-   			ALU_Sel,// ALU Selection
-            CarryIn, 
-   			Sign,
-            ALU_Out, // ALU 8-bit Output
-   			Zero, 
-   			Overflow
-   			
-     );
+  ALU_Out, // ALU 8-bit Output
+  A,B,  // ALU 8-bit Inputs                 
+  ALU_Sel,// ALU Selection
+  CarryIn, 
+  Sign,
+  Zero, 
+  Overflow
+);
     initial begin
     // hold reset state for 100 ns.
       // ALU_Out = 32'd0;
-      A = 32'b11111111111111111111111111111110;
-      B = 32'b11111111111111111111111111111111;
+      A = 32'b11111111111111111111111111111111;
+      B = 32'b00000000000000000000000000110011;
       ALU_Sel = 4'b1111;
       CarryIn = 0;
       Sign = 0;

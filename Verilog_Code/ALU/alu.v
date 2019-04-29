@@ -56,52 +56,36 @@ module ALU(
         4'h4:   // Logical Shift Left
           begin
             tmp = A;
-            if (B < 32) begin
-              for (i = 0; i < B[4:0]; i=i+1) begin
-                tmp = tmp << 1;
-              end
-              ALU_Result = tmp;
-            end else begin
-              ALU_Result = 0;
+            for (i = 0; i < B[4:0]; i=i+1) begin
+              tmp = tmp << 1;
             end
+            ALU_Result = tmp;
           end
         4'h5:  // Logical Shift Right
           begin
             tmp = A;
-            if (B < 32) begin
-              for (i = 0; i < B[4:0]; i=i+1) begin
-                tmp = tmp >> 1;
-              end
-              ALU_Result = tmp;
-            end else begin
-              ALU_Result = 0;
+            for (i = 0; i < B[4:0]; i=i+1) begin
+              tmp = tmp >> 1;
             end
+            ALU_Result = tmp;
           end
 
         4'h6: // Arith Shift left
           begin
             tmp = A;
-            if (B < 32) begin
-              for (i = 0; i < B[4:0]; i=i+1) begin
-                tmp = {tmp[31:0], 1'b0};
-              end
-              ALU_Result = tmp;
-            end else begin
-              ALU_Result = 0;
+            for (i = 0; i < B[4:0]; i=i+1) begin
+              tmp = {tmp[31:0], 1'b0};
             end
+            ALU_Result = tmp;
           end
             
         4'h7: // Arith shift right
           begin
             tmp = A;
-            if (B < 32) begin
-              for (i = 0; i < B[4:0]; i=i+1) begin
-                tmp = {tmp[31], tmp[31:1]};
-              end
-              ALU_Result = tmp;
-            end else begin
-              ALU_Result = 32'hffff_ffff;
+            for (i = 0; i < B[4:0]; i=i+1) begin
+              tmp = {tmp[31], tmp[31:1]};
             end
+            ALU_Result = tmp;
           end       
           
         4'h8:

@@ -1,5 +1,6 @@
 // Code your testbench here
 // or browse Examples
+`include "Sign_Extender.v"
 module Sign_Extender_tb();
   
   reg	[31:0] 	unex;
@@ -34,6 +35,12 @@ module Sign_Extender_tb();
     unex = 32'b10000000000000000000000011111111;
     #10
     $display("%b\t%b\t%b", unex, sse, ext);
+
+    sse = 2'b11;
+    unex = 32'b00000000000000000000011101000000;
+    #10
+    $display("%b\t%b\t%b", unex, sse, ext);
+
     
   end
 endmodule
