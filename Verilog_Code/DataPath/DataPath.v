@@ -9,7 +9,7 @@ module nPC_adder(output reg [31:0] adder_out, input [31:0] nPC);
         adder_out <= nPC + 32'd4;
     endmodule
 
-module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, out_PA_regFile, out_MUXB_o,  
+module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, out_MUXA_o, out_MUXB_o,  
                 output RW_o, MOV_o, RFld,
                 output[6:0] aState, output [5:0] MUXF_out, output [4:0] MA_o,B_o,
                 input clk, reset, MOC, DMOC, 
@@ -37,7 +37,7 @@ module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, out_PA_regFile
     assign MOV_o = MOV;
     assign OpC_o = MUXF_out;
     assign MR_0 = MR;
-    assign out_PA_regFile = MUXA_out;
+    assign out_MUXA_o = MUXA_out;
     assign out_MUXB_o = MUXB_out; 
     assign MA_o = MUXPA_out; // this output is for testing - att.Sofia
     assign B_o = IR[25:21]; // this output is for testing - att.Sofia
