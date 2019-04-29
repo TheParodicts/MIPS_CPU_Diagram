@@ -143,7 +143,13 @@ module ALU(
           end
         
         4'hE:
-          ALU_Result = (A < B) ? 32'd1 : 32'd0; 
+          begin
+            if ((A[31] != B[31]) & (Sign == 1)) begin // If they are of opposite signs
+              ALU_Result = (A[31] > B[31]) ? 64'b1 : 64'b0; // If A is negative
+            end else begin
+              ALU_result = (A < B) ? 64'b1 : 64'b0; // Unsigned SLT
+            end
+          end
         
         4'hF:
           ALU_Result = (A == B) ? 32'd1 : 32'd0;
