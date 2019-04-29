@@ -46,13 +46,13 @@ module DataPath_tb;
 
     // Start the system with a hard Reset for #2 (while the clock ticks, loading CR).
     initial begin      
-        $display("               IR                             MAR                          PC        nPC cState RW  MOV  MOC clk   RegFileA_out  RegFileB_out    ALU_out ");
+        $display("               IR                             MAR                          PC        nPC cState RW  MOV  MOC clk   RegFileA_out     MUXB_out    ALU_out ");
         reset = 1'b1;
         #2 reset = 1'b0;
     end
 
     always @(clk) begin
-        $display("%b %b %d %d   %d    %b    %b   %b   %b %d %d         %d", IR, MAR, PC, nPC, aState, RW, MOV, MOC, clk, regFileA_o, regFileB_o, ALU_out);
+        $display("%b %b %d %d   %d    %b    %b   %b   %b %d    %d    %d", IR, MAR, PC, nPC, aState, RW, MOV, MOC, clk, regFileA_o, regFileB_o, ALU_out);
     end
 
 endmodule
