@@ -12,8 +12,8 @@ module nPC_adder(output reg [31:0] adder_out, input [31:0] nPC);
 module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, out_PA_regFile, out_PB_regFile,  
                 output RW_o, MOV_o, RFld,
                 output[6:0] aState, output [5:0] MUXF_out, output [4:0] MA_o,B_o,
-                input clk, reset, Cond, MOC, DMOC, 
-                input [31:0] DataOut);
+                input clk, reset, MOC, DMOC, 
+                input [31:0] DataOut, ALU_out);
                 
 /// Control Unit Declarations.
 /// Required wires
@@ -48,7 +48,7 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     ControlUnit CU( IRld, PCld, nPCld, RFld, MA, MB, MC, ME, MF, MPA, 
                     MP, MR, RW, MOV, MDRld, MARld, OpC, Cin, SSE, OP, 
                     activeState, //Outputting active state for testing purposes
-                    clk, reset, IR, MOC, Cond, DMOC);
+                    clk, reset, IR, MOC, ALU_out[0], DMOC);
 
 /// Ext. Register Declarations.
     
@@ -85,7 +85,7 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
 
     //change RegData for Aluout and wtoReg to MUXC_out after testing
     RegisterFile registerFile(PA_regFile, PB_regFile, ALU_out, 
-                            MUXPA_out, IR[25:21], MUXC_out, RFld, clk);
+                            MUXPA_out, IR[20:16], MUXC_out, RFld, clk); // shifted IR down to 20:16 - Brian
 
 // ALU Declarations.
     wire [31:0] MUXA_out;

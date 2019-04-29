@@ -120,7 +120,7 @@ module ALU(
           end
         
         4'hE:
-          ALU_Result = (B < A) ? 32'd1 : 32'd0; // Flipped B and A here; Seem sto work properly this way. -Brian
+          ALU_Result = (A < B) ? 32'd1 : 32'd0; 
         
         4'hF:
           ALU_Result = (A == B) ? 32'd1 : 32'd0;
