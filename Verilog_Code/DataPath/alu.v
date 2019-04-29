@@ -14,9 +14,9 @@ module ALU(
   reg [15:0] val16;
   reg [7:0] val8;
   reg [3:0] val4;
+  reg[31:0] tmp;
 
-  
-  wire tmp;
+  integer i;
   
   Overflow_Detector ovr(
     .A_ext(A), 
@@ -53,17 +53,56 @@ module ALU(
         4'h3:
           ALU_Result = {32'b0, {B[15:0], 16'b0}}; // LUI imm16 of input B extendended at the right with zeroes
         
-        4'h4:
-          ALU_Result = A << 1;
-        
-        4'h5:
-          ALU_Result = A >> 1;
-        
+        4'h4:   // Logical Shift Left
+          begin
+            tmp = A;
+            if (B < 32) begin
+              for (i = 0; i < B[4:0]; i=i+1) begin
+                tmp = tmp << 1;
+              end
+              ALU_Result = tmp;
+            end else begin
+              ALU_Result = 0;
+            end
+          end
+        4'h5:  // Logical Shift Right
+          begin
+            tmp = A;
+            if (B < 32) begin
+              for (i = 0; i < B[4:0]; i=i+1) begin
+                tmp = tmp >> 1;
+              end
+              ALU_Result = tmp;
+            end else begin
+              ALU_Result = 0;
+            end
+          end
+
         4'h6: // Arith Shift left
-          ALU_Result = {A[30:0], A[0]};
+          begin
+            tmp = A;
+            if (B < 32) begin
+              for (i = 0; i < B[4:0]; i=i+1) begin
+                tmp = {tmp[31:0], 1'b0};
+              end
+              ALU_Result = tmp;
+            end else begin
+              ALU_Result = 0;
+            end
+          end
             
         4'h7: // Arith shift right
-          ALU_Result = {A[31], A[31:1]}; 
+          begin
+            tmp = A;
+            if (B < 32) begin
+              for (i = 0; i < B[4:0]; i=i+1) begin
+                tmp = {tmp[31], tmp[31:1]};
+              end
+              ALU_Result = tmp;
+            end else begin
+              ALU_Result = 32'hffff_ffff;
+            end
+          end       
           
         4'h8:
           ALU_Result = A & B;
