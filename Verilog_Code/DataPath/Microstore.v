@@ -51,11 +51,14 @@ always @ (currentState, reset)
 7'd39: currentStateSignals = 45'b000011000001000000000000000111100000001101110;
 7'd40: currentStateSignals = 45'b000011000001000000000000000111000011000101101;
 7'd41: currentStateSignals = 45'b000010100001000000000000000111100011000101101;
+7'd42: currentStateSignals = 45'b000011000001000000000000000111000011001101111;
+7'd43: currentStateSignals = 45'b000011000001000000000000000111100011001101101;
 
-                // Default state is Reset (0) state.
+
+                // Default state is 1 (ignore instruction and move along).
                 default: begin
-                    currentStateSignals = 45'b001001100000000000000000000001000000000100001;
-                    activeState = 7'd0; // For testing purposes.
+                    currentStateSignals = 45'b011000000000100000000000000000000000000100011;
+                    activeState = 7'd1; // For testing purposes.
                 end
             endcase
         end
