@@ -111,7 +111,7 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
 
     // Hi
     Registers registerHi(Hi_out, Hi, HIld, clk);
-    Mux_2x1_32b MUXHI(Hi, ALU_Hi, ALU_Lo, MHI);
+    Mux_2x1_32b MUXHI(Hi, ALU_Lo, ALU_Hi, MHI);
 
     // Lo
     Registers registerLo(Lo_out, Lo, LOld, clk);

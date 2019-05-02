@@ -25,7 +25,7 @@ module ALU(
   );
 
   assign Zero = ~(|ALU_Result);
-  assign ALU_Hi = ALU_Result[63:0];
+  assign ALU_Hi = ALU_Result[63:32];
   assign ALU_Lo = ALU_Result[31:0];
 
   always @(*)
