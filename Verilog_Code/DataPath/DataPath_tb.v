@@ -38,14 +38,14 @@ module DataPath_tb;
  // 12 up-down clock cycles of #2.
     initial begin
         clk = 1'b0;
-        repeat (150) begin
+        repeat (600) begin
             #1 clk = !clk;
         end
         
         fo = $fopen("RAMcontents.txt", "w");
         Address = 9'd0;
         $fdisplay(fo,"Address | Contents");
-        repeat(512) begin
+        repeat(600) begin
             $fdisplay(fo,"%h = %b", Address, ram1.Mem[Address]); 
             Address = Address +9'd1;
         end

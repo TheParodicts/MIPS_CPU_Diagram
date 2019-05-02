@@ -66,6 +66,7 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
 
     wire [31:0] ALU_Lo;
     wire [31:0] ALU_Hi;
+    wire [4:0] RT_adder_out;
 
     Registers PC(PC_out, nPC_out, PCld, clk);
     Registers nPC(nPC_out, MUXP_out, nPCld, clk);
@@ -87,7 +88,7 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     Mux_4x1_5b MUXPA(MUXPA_out, IR[20:16], IR[25:21], 5'b0, RT_adder_out, MPA);
     Mux_2x1_5b MUXPB(MUXPB_out,IR[20:16], IR[25:21], MPB); 
 
-    wire [4:0] RT_adder_out;
+    
 
     IR_adder RT_adder(RT_adder_out, IR[20:16]);
     
@@ -127,6 +128,6 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     ALU ALU(ALU_Hi, ALU_Lo, MUXA_out, MUXB_out, OP, Cin, 1'b0, Z_flag, OvrF_flag);
 
     // always @(*)begin
-    //     $monitor(" %b  %b  %b  %b", MF, MDR_out, MOV, clk);
+    //     $monitor(" %d  %b  %d  %b", activeState, MUXA_out, MUXB_out, MB);
     //     end
 endmodule
