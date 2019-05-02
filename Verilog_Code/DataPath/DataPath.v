@@ -13,7 +13,10 @@ module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, out_MUXA_o, ou
                 output RW_o, MOV_o, RFld,
                 output[6:0] aState, output [5:0] MUXF_out, output [4:0] MA_o,B_o,
                 input clk, reset, MOC, DMOC, 
-                input [31:0] DataOut, output [31:0] ALU_Lo);
+                input [31:0] DataOut, 
+                
+                output [31:0] ALU_Lo, Hi_out, Lo_out // Debug outputs
+);
                 
 /// Control Unit Declarations.
 /// Required wires
@@ -96,7 +99,11 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
 
     wire Z_flag, OvrF_flag;
 
+    // Hi
     Registers registerHi(Hi_out, Hi, 1'b0, clk);
+    Mux_2x1_32b MUXHI(Hi, ALU_Hi, ALU_Lo, MHI);
+
+    // Lo
     Registers registerLo(Lo_out, Lo, 1'b0, clk);
     assign Lo = ALU_Lo;
 
@@ -106,10 +113,7 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     Mux_4x1_32b MUXA(MUXA_out, PC_out, PA_regFile, Lo_out, Hi_out, {1'b0, MA});
     Mux_4x1_32b MUXB(MUXB_out, MDR_out, PB_regFile, SE_out, 32'b0, MB);
 
-    Mux_2x1_32b MUXHI(Hi, ALU_Hi, ALU_Lo, MHI);
-
-
-    // Missing: ALU Sign input, SE case select, TESTING
+    // Missing: ALU Sign input
     ALU ALU(ALU_Hi, ALU_Lo, MUXA_out, MUXB_out, OP, Cin, 1'b0, Z_flag, OvrF_flag);
 
     // always @(*)begin

@@ -2,7 +2,7 @@
 `include "RAM.v"
 
 module DataPath_tb;
-    wire [31:0] IR, MAR, PC, nPC, DataIn, DataOut, MUXA_o, MUXB_o, ALU_out;
+    wire [31:0] IR, MAR, PC, nPC, DataIn, DataOut, MUXA_o, MUXB_o, ALU_out, Hi, Lo;
 
     wire [6:0] aState;
     wire [5:0] OpC;
@@ -11,7 +11,7 @@ module DataPath_tb;
     reg clk, reset;
 
     DataPath DP(IR, MAR, PC, nPC, DataIn, MUXA_o, MUXB_o, RW, MOV, RF,
-                aState, OpC, MA_o, B_o, clk, reset, MOC, DMOC, DataOut, ALU_out);
+                aState, OpC, MA_o, B_o, clk, reset, MOC, DMOC, DataOut, ALU_out, Hi, Lo);
 
     /// RAM Declarations.
     ram512x8 ram1 (DataOut, MOC, DMOC, RW, MOV,
@@ -56,8 +56,8 @@ module DataPath_tb;
 
     // Start the system with a hard Reset for #2 (while the clock ticks, loading CR).
     initial begin      
-        $display("               IR                        MAR        PC         nPC ");
-        $monitor("%b %d %d %d", IR, MAR, PC, nPC);
+        $display("               IR                        MAR        PC         nPC    Hi                 Lo");
+        $monitor("%b %d %d %d %b %b", IR, MAR, PC, nPC, Hi, Lo);
         reset = 1'b1;
         #2 reset = 1'b0;
     end
