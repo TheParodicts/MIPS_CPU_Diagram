@@ -5,11 +5,10 @@ module ALU(
   input CarryIn, 
   input Sign,
   output Zero, 
-  output Overflow
+  output Overflow,
+  output [31:0] Hi_out, Lo_out
 );
   
-  wire [31:0] Lo;
-  wire [31:0] Hi;
   reg [63:0] ALU_Result;
   reg [15:0] val16;
   reg [7:0] val8;
@@ -26,8 +25,8 @@ module ALU(
     .overflow(Overflow)
   );
 
-  assign Lo = ALU_Result[31:0];
-  assign Hi = ALU_Result[63:32];
+  assign Lo_out = ALU_Result[31:0];
+  assign Hi_out = ALU_Result[63:32];
   assign ALU_Out = ALU_Result[31:0];
   
   assign Zero = ~(|ALU_Result);
