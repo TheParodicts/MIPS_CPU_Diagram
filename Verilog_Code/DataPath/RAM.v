@@ -126,7 +126,7 @@ module ram512x8 (output reg [31:0] DataOut, output reg MOC, output reg DMOC=1'b0
         else //Write
             case (OpCode)
                 // 64bits (doubleword) ADDRESS MUST BE MULTIPLE OF 8.
-                6'b111101: 
+                6'b111111: // Changed from 111101 
                     if(!DMOC) //If it's the first most sig 32 bits.
                         begin
                             Mem[(Address & dwAddress)] = DataIn[31:24];
