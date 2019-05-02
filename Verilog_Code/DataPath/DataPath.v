@@ -62,7 +62,7 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     
     wire [31:0] MUXP_out, MUXR_out, MUXE_out;
     
-    wire [4:0] MUXC_out, MUXPA_out;
+    wire [4:0] MUXC_out, MUXPA_out, MUXPB_out;
 
     wire [31:0] ALU_Lo;
     wire [31:0] ALU_Hi;
@@ -89,7 +89,7 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
 
     wire [4:0] RT_adder_out;
 
-    IR_adder RT_adder(RT_adder_out, IR[20-16]);
+    IR_adder RT_adder(RT_adder_out, IR[20:16]);
     
     
 //Register File Declarations.
@@ -98,7 +98,7 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
 
     //change RegData for Aluout and wtoReg to MUXC_out after testing
     RegisterFile registerFile(PA_regFile, PB_regFile, ALU_Lo, 
-                            MUXPA_out, IR[20:16], MUXC_out, RFld, clk); // shifted IR down to 20:16 - Brian
+                            MUXPA_out, MUXPB_out, MUXC_out, RFld, clk); // shifted IR down to 20:16 - Brian
 
 // ALU Declarations.
     wire [31:0] MUXA_out;
