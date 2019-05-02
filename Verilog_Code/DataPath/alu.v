@@ -5,8 +5,8 @@ module ALU(
   input CarryIn, 
   input Sign,
   output Zero, 
-  output Overflow,
-  output [31:0] Hi_out, Lo_out
+  output Overflow
+  //output [31:0] Hi_out, Lo_out
 );
   
   reg [63:0] ALU_Result;
@@ -146,7 +146,7 @@ module ALU(
             if ((A[31] != B[31]) & (Sign == 1)) begin // If they are of opposite signs
               ALU_Result = (A[31] > B[31]) ? 64'b1 : 64'b0; // If A is negative
             end else begin
-              ALU_result = (A < B) ? 64'b1 : 64'b0; // Unsigned SLT
+              ALU_Result = (A < B) ? 64'b1 : 64'b0; // Unsigned SLT
             end
           end
         

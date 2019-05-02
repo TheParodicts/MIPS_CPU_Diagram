@@ -13,7 +13,7 @@ module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, out_PA_regFile
                 output RW_o, MOV_o, RFld,
                 output[6:0] aState, output [5:0] MUXF_out, output [4:0] MA_o,B_o,
                 input clk, reset, MOC, DMOC, 
-                input [31:0] DataOut, ALU_out);
+                input [31:0] DataOut, output[31:0] ALU_out);
                 
 /// Control Unit Declarations.
 /// Required wires
