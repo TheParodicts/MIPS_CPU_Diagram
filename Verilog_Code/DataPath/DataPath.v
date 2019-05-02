@@ -26,9 +26,9 @@ module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, out_MUXA_o, ou
 /// Control Unit Declarations.
 /// Required wires
 // Output wires
-    wire IRld, PCld, nPCld, RFld, MA, MC, ME, MF, MP, MR,
+    wire IRld, PCld, nPCld, RFld, HIld, LOld, MPB, ME, MF, MP, MR, MHI,
             RW, MOV, MDRld, MARld,Cin;        
-    wire [1:0]  MPA, MB;
+    wire [1:0]  MA, MC, MPA, MB;
     wire [5:0] OpC;
     wire [1:0] SSE;
     wire [3:0] OP;
@@ -53,8 +53,8 @@ module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, out_MUXA_o, ou
 
 wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
 /// Control Unit Declaration
-    ControlUnit CU( IRld, PCld, nPCld, RFld, MA, MB, MC, ME, MF, MPA, 
-                    MP, MR, RW, MOV, MDRld, MARld, OpC, Cin, SSE, OP, 
+    ControlUnit CU( IRld, PCld, nPCld, RFld, HIld, LOld, MA, MB, MC, ME, MF, MPA, 
+                    MPB, MP, MR, MHI, RW, MOV, MDRld, MARld, OpC, Cin, SSE, OP, 
                     activeState, //Outputting active state for testing purposes
                     clk, reset, IR, MOC, ALU_Lo[0], DMOC);
 
@@ -85,7 +85,7 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
 
     Mux_4x1_5b MUXC(MUXC_out, IR[15:11], IR[20:16], 5'd31, 5'd0, MC); // Make MC 2 bits.
     Mux_4x1_5b MUXPA(MUXPA_out, IR[20:16], IR[25:21], 5'b0, RT_adder_out, MPA);
-    Mux_2x1_5b MUXPB(MUXPB_out,IR[20:16], IR[25:21], 2'd0); // Create MPB 2 bit control signal
+    Mux_2x1_5b MUXPB(MUXPB_out,IR[20:16], IR[25:21], MPB); 
 
     wire [4:0] RT_adder_out;
 
@@ -110,17 +110,17 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     wire Z_flag, OvrF_flag;
 
     // Hi
-    Registers registerHi(Hi_out, Hi, 1'b1, clk);
+    Registers registerHi(Hi_out, Hi, HIld, clk);
     Mux_2x1_32b MUXHI(Hi, ALU_Hi, ALU_Lo, MHI);
 
     // Lo
-    Registers registerLo(Lo_out, Lo, 1'b1, clk);
+    Registers registerLo(Lo_out, Lo, LOld, clk);
     assign Lo = ALU_Lo;
 
     Sign_Extender SE(SE_out, IR, SSE);
 
     // Hardcoded a Zero in MSB of MUX-A select for backwards compatability
-    Mux_4x1_32b MUXA(MUXA_out, PC_out, PA_regFile, Lo_out, Hi_out, {1'b0, MA});
+    Mux_4x1_32b MUXA(MUXA_out, PC_out, PA_regFile, Lo_out, Hi_out, MA);
     Mux_4x1_32b MUXB(MUXB_out, MDR_out, PB_regFile, SE_out, 32'b0, MB);
 
     // Missing: ALU Sign input
