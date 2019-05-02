@@ -31,6 +31,16 @@ module DataPath_tb;
             Address = Address + 1; 
         end 
         $fclose(fi);
+
+         fo = $fopen("RAMcontentsInitial.txt", "w");
+        Address = 9'd0;
+        $fdisplay(fo,"Address | Contents");
+        repeat(512) begin
+            $fdisplay(fo,"%d = %b", Address, ram1.Mem[Address]); 
+            Address = Address +9'd1;
+        end
+         $fclose(fo);
+         
      end
 
 
@@ -38,26 +48,31 @@ module DataPath_tb;
  // 12 up-down clock cycles of #2.
     initial begin
         clk = 1'b0;
-        repeat (600) begin
+        repeat (1200) begin
             #1 clk = !clk;
+
+            if(MAR> 32'd208) begin
+                fo = $fopen("RAMcontents.txt", "w");
+            Address = 9'd0;
+            $fdisplay(fo,"Address | Contents");
+            repeat(512) begin
+                $fdisplay(fo,"%d = %b", Address, ram1.Mem[Address]); 
+                Address = Address +9'd1;
+            end
+            $fclose(fo);
+            end
+
         end
         
-        fo = $fopen("RAMcontents.txt", "w");
-        Address = 9'd0;
-        $fdisplay(fo,"Address | Contents");
-        repeat(600) begin
-            $fdisplay(fo,"%h = %b", Address, ram1.Mem[Address]); 
-            Address = Address +9'd1;
-        end
-         $fclose(fo);
+       
       
 
     end
 
     // Start the system with a hard Reset for #2 (while the clock ticks, loading CR).
     initial begin      
-        $display("               IR                        MAR        PC         nPC");
-        $monitor("%b %d %d %d", IR, MAR, PC, nPC);
+        $display("               IR                        MAR        PC         nPC  State       DataOut       ALU_out");
+        $monitor("%b %b %d %d %d %b %d %d %b", IR, MAR, PC, nPC, aState, DataOut, DataIn, MOC, OpC);
         reset = 1'b1;
         #2 reset = 1'b0;
     end

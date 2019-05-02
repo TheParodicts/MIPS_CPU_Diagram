@@ -30,9 +30,9 @@ module ram512x8 (output reg [31:0] DataOut, output reg MOC, output reg DMOC=1'b0
  //8-bits of 1's or 0's for sign extension.
  reg [7:0] ones = 8'b11111111;
  reg [7:0] zeroes = 8'b00000000;
- reg [8:0] dwAddress = 7'b1111000;
- reg [8:0] wAddress = 7'b1111100;
- reg [8:0] hwAddress = 7'b1111110;
+ reg [8:0] dwAddress = 9'b111111000;
+ reg [8:0] wAddress = 9'b111111100;
+ reg [8:0] hwAddress = 9'b111111110;
 
  /*============================================================================
  RAM LOGIC
@@ -147,10 +147,12 @@ module ram512x8 (output reg [31:0] DataOut, output reg MOC, output reg DMOC=1'b0
                 //32bits (word) ADDRESS MUST BE MULTIPLE OF 4
                 6'b101011:
                 begin
+                    $display("Before writing at %b: %b %b %b %b", (Address & wAddress), Mem[(Address & wAddress)],Mem[(Address & wAddress)+1],Mem[(Address & wAddress)+2], Mem[(Address & wAddress)+3]);
                     Mem[(Address & wAddress)] = DataIn[31:24];
                     Mem[(Address & wAddress)+1]= DataIn[23:16]; 
                     Mem[(Address & wAddress)+2] = DataIn[15:8];
                     Mem[(Address & wAddress)+3]= DataIn[7:0]; 
+                    $display("After writing at %d: %b %b %b %b", (Address & wAddress), Mem[(Address & wAddress)],Mem[(Address & wAddress)+1],Mem[(Address & wAddress)+2], Mem[(Address & wAddress)+3]);
                 end
 
                 //16bits (halfword) ADDRESS MUST BE EVEN.
