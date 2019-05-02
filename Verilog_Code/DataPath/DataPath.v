@@ -100,11 +100,11 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     wire Z_flag, OvrF_flag;
 
     // Hi
-    Registers registerHi(Hi_out, Hi, 1'b0, clk);
+    Registers registerHi(Hi_out, Hi, 1'b1, clk);
     Mux_2x1_32b MUXHI(Hi, ALU_Hi, ALU_Lo, MHI);
 
     // Lo
-    Registers registerLo(Lo_out, Lo, 1'b0, clk);
+    Registers registerLo(Lo_out, Lo, 1'b1, clk);
     assign Lo = ALU_Lo;
 
     Sign_Extender SE(SE_out, IR, SSE);
