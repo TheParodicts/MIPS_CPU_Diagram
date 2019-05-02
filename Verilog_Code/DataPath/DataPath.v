@@ -9,6 +9,11 @@ module nPC_adder(output reg [31:0] adder_out, input [31:0] nPC);
         adder_out <= nPC + 32'd4;
     endmodule
 
+module IR_adder(output reg [4:0] adder_out, input [4:0] a);
+    always @ (a)
+        adder_out <= a+5'd1;
+endmodule
+
 module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, out_MUXA_o, out_MUXB_o,  
                 output RW_o, MOV_o, RFld,
                 output[6:0] aState, output [5:0] MUXF_out, output [4:0] MA_o,B_o,
@@ -78,9 +83,14 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
 
     Mux_2x1_6b MUXF(MUXF_out, OpC, IR[31:26], MF);
 
-    Mux_2x1_5b MUXC(MUXC_out, IR[15:11], IR[20:16], MC);
-    Mux_3x1_5b MUXPA(MUXPA_out, IR[20:16], IR[25:21], 5'b0, MPA);
+    Mux_4x1_5b MUXC(MUXC_out, IR[15:11], IR[20:16], 5'd31, 5'd0, MC); // Make MC 2 bits.
+    Mux_4x1_5b MUXPA(MUXPA_out, IR[20:16], IR[25:21], 5'b0, RT_adder_out, MPA);
+    Mux_2x1_5b MUXPB(MUXPB_out,IR[20:16], IR[25:21], 2'd0); // Create MPB 2 bit control signal
 
+    wire [4:0] RT_adder_out;
+
+    IR_adder RT_adder(RT_adder_out, IR[20-16]);
+    
     
 //Register File Declarations.
     
