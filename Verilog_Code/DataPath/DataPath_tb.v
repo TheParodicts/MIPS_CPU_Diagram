@@ -48,10 +48,10 @@ module DataPath_tb;
  // 12 up-down clock cycles of #2.
     initial begin
         clk = 1'b0;
-        repeat (1200) begin
+        repeat (600) begin
             #1 clk = !clk;
 
-            if(MAR> 32'd208) begin
+            
                 fo = $fopen("RAMcontents.txt", "w");
             Address = 9'd0;
             $fdisplay(fo,"Address | Contents");
@@ -60,7 +60,7 @@ module DataPath_tb;
                 Address = Address +9'd1;
             end
             $fclose(fo);
-            end
+            
 
         end
         
@@ -72,7 +72,7 @@ module DataPath_tb;
     // Start the system with a hard Reset for #2 (while the clock ticks, loading CR).
     initial begin      
         $display("               IR                        MAR        PC         nPC  State       DataOut       ALU_out");
-        $monitor("%b %b %d %d %d %b %d %d %b", IR, MAR, PC, nPC, aState, DataOut, DataIn, MOC, OpC);
+        $monitor("%b %d %d %d %d %b %d %d %b", IR, MAR, PC, nPC, aState, DataOut, DataIn, MOC, OpC);
         reset = 1'b1;
         #2 reset = 1'b0;
     end
