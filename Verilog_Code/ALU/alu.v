@@ -1,9 +1,9 @@
 module ALU(
+  output [31:0] ALU_Out,
   input [31:0] A,B, // ALU 32-bit inputs
   input [3:0] ALU_Sel, //ALU 4-bit selection
   input CarryIn, 
   input Sign,
-  output [31:0] ALU_Out,
   output Zero, 
   output Overflow
 );
@@ -11,8 +11,12 @@ module ALU(
   wire [31:0] Lo;
   wire [31:0] Hi;
   reg [63:0] ALU_Result;
-  
-  wire tmp;
+  reg [15:0] val16;
+  reg [7:0] val8;
+  reg [3:0] val4;
+  reg[31:0] tmp;
+
+  integer i;
   
   Overflow_Detector ovr(
     .A_ext(A), 
@@ -36,22 +40,69 @@ module ALU(
           ALU_Result = A + B + CarryIn;
         
         4'h1:
-          ALU_Result = A - B;
+          ALU_Result =  A-B; // Not sure how this works, since these should be A = RT and B = RS -> Brian.
         
         4'h2:
-          ALU_Result = A * B;
+          begin
+            if (B == 32'b0) begin
+          	  ALU_Result = 64'b0;
+            end else begin
+              ALU_Result = A * B;
+            end
+          end
+        4'h3:
+          ALU_Result = {32'b0, {B[15:0], 16'b0}}; // LUI imm16 of input B extendended at the right with zeroes
         
-        4'h4:
-          ALU_Result = A << 1;
-        
-        4'h5:
-          ALU_Result = A >> 1;
-        
+        4'h4:   // Logical Shift Left
+          begin
+            tmp = A;
+            if (B < 32) begin
+              for (i = 0; i < B[4:0]; i=i+1) begin
+                tmp = tmp << 1;
+              end
+              ALU_Result = tmp;
+            end else begin
+              ALU_Result = 0;
+            end
+          end
+        4'h5:  // Logical Shift Right
+          begin
+            tmp = A;
+            if (B < 32) begin
+              for (i = 0; i < B[4:0]; i=i+1) begin
+                tmp = tmp >> 1;
+              end
+              ALU_Result = tmp;
+            end else begin
+              ALU_Result = 0;
+            end
+          end
+
         4'h6: // Arith Shift left
-          ALU_Result = {A[30:0], A[0]};
+          begin
+            tmp = A;
+            if (B < 32) begin
+              for (i = 0; i < B[4:0]; i=i+1) begin
+                tmp = {tmp[31:0], 1'b0};
+              end
+              ALU_Result = tmp;
+            end else begin
+              ALU_Result = 0;
+            end
+          end
             
         4'h7: // Arith shift right
-          ALU_Result = {A[31], A[31:1]}; 
+          begin
+            tmp = A;
+            if (B < 32) begin
+              for (i = 0; i < B[4:0]; i=i+1) begin
+                tmp = {tmp[31], tmp[31:1]};
+              end
+              ALU_Result = tmp;
+            end else begin
+              ALU_Result = 32'hffff_ffff;
+            end
+          end       
           
         4'h8:
           ALU_Result = A & B;
@@ -65,14 +116,50 @@ module ALU(
         4'hB:
           ALU_Result = ~(A | B);
         
-        4'hC:
-          ALU_Result = ~(A & B);
+        4'hC: // Count Leading Zero's
+          begin
+            if(A[31:0] == 32'b0) begin
+              ALU_Result = 32;
+            end else begin
+              ALU_Result[4] = (A[31:16] == 16'b0);
+              val16 = ALU_Result[4] ? A[15:0] : A[31:16];
+
+              ALU_Result[3] = (val16[15:8] == 8'b0);
+              val8 = ALU_Result[3] ? val16[7:0] : val16[15:8];
+
+              ALU_Result[2] = (val8[7:4] == 4'b0);
+              val4 = ALU_Result[2] ? val8[3:0] : val8[7:4];
+
+              ALU_Result[1] = (val4[3:2] == 2'b0);
+              ALU_Result[0] = ALU_Result[1] ? ~val4[1] : ~val4[3];
+
+              ALU_Result[63:5] = 0;
+            end
+          end
         
-        4'hD:
-          ALU_Result = ~(A ^ B);
+        4'hD: // Count Leading One's
+          begin  
+            if(A[31:0] == 32'b11111111111111111111111111111111) begin
+              ALU_Result = 32;
+            end else begin
+              ALU_Result[4] = (A[31:16] == 16'b1111111111111111);
+              val16 = ALU_Result[4] ? A[15:0] : A[31:16];
+
+              ALU_Result[3] = (val16[15:8] == 8'b11111111);
+              val8 = ALU_Result[3] ? val16[7:0] : val16[15:8];
+
+              ALU_Result[2] = (val8[7:4] == 4'b1111);
+              val4 = ALU_Result[2] ? val8[3:0] : val8[7:4];
+
+              ALU_Result[1] = (val4[3:2] == 2'b11);
+              ALU_Result[0] = ALU_Result[1] ? val4[1] : val4[3];
+
+              ALU_Result[63:5] = 0;
+            end
+          end
         
         4'hE:
-          ALU_Result = (A < B) ? 32'd1 : 32'd0;
+          ALU_Result = (A < B) ? 32'd1 : 32'd0; 
         
         4'hF:
           ALU_Result = (A == B) ? 32'd1 : 32'd0;
@@ -102,7 +189,7 @@ module Overflow_Detector(
     case(op)
       4'h0:
         begin
-          temp_out = {0'b0, A_ext} + {0'b0, B_ext};
+          temp_out = {1'b0, A_ext} + {1'b0, B_ext};
           carr_out = temp_out[32];
           
           if(sign) begin
@@ -114,7 +201,7 @@ module Overflow_Detector(
       
       4'h1:
         begin
-          temp_out = {0'b0, A_ext} - {0'b0, B_ext};
+          temp_out = {1'b0, A_ext} - {1'b0, B_ext};
           carr_out = temp_out[32];
           
           if(sign) begin
@@ -129,4 +216,3 @@ module Overflow_Detector(
     endcase
   end
 endmodule
-          

@@ -3,11 +3,11 @@
 `include "State_Selection.v"
 `include "State_Encoder.v"
 
-module ControlUnit( output IRld, PCld, nPCld, RFld, MA,
-                        output [1:0] MB,
-                        output MC, ME, MF, 
+module ControlUnit( output IRld, PCld, nPCld, RFld, HIld, LOld, 
+                        output [1:0] MA, MB, MC, 
+                        output ME, MF, 
                         output [1:0] MPA,
-                        output MP, MR,
+                        output  MPB, MP, MR, MHI,
                         output RW, MOV, MDRld, MARld, 
                         output [5:0] OpC,
                         output Cin,
@@ -20,7 +20,7 @@ module ControlUnit( output IRld, PCld, nPCld, RFld, MA,
 
 wire [6:0] out_Mux_StateSlct, Incrementer, out_adder, encodedOut;
 // Microstore declarations
-    wire[44:0] StateSignals;
+    wire[50:0] StateSignals;
     wire[6:0] nextState; // For testing purposes.
     Microstore Mstore(StateSignals, nextState, reset, out_Mux_StateSlct);
 
@@ -30,8 +30,8 @@ wire [6:0] out_Mux_StateSlct, Incrementer, out_adder, encodedOut;
     wire [1:0] S;
     wire [2:0] N;
     ControlRegister CReg( IRld, PCld, nPCld,
-                            RFld, MA, MB, MC, ME, MF, 
-                            MPA, MP, MR, RW, MOV, MDRld, 
+                            RFld,HIld, LOld, MA, MB, MC, ME, MF, 
+                            MPA, MPB, MP, MR, MHI, RW, MOV, MDRld, 
                             MARld, OpC, Cin, SSE, OP, CR, 
                             Inv, IncRld, S, N, 
                             activeState,

@@ -1,8 +1,8 @@
-module ControlRegister( output reg IRld, PCld, nPCld, RFld, MA,
-                        output reg[1:0] MB,
-                        output reg MC, ME, MF, 
+module ControlRegister( output reg IRld, PCld, nPCld, RFld, HIld, LOld,
+                        output reg[1:0] MA, MB, MC,
+                        output reg ME, MF, 
                         output reg [1:0] MPA,
-                        output reg MP, MR,
+                        output reg MPB, MP, MR, MHI,
                         output reg RW, MOV, MDRld, MARld, 
                         output reg [5:0] OpC,
                         output reg Cin,
@@ -13,24 +13,28 @@ module ControlRegister( output reg IRld, PCld, nPCld, RFld, MA,
                         output reg [1:0] S,
                         output reg [2:0] N,
                         output reg [6:0] activeState,
-                        input [44:0] currentStateSignals, input clk,
+                        input [50:0] currentStateSignals, input clk,
                         input [6:0] curState); 
 
 always @ (negedge clk)
     // Update the Status Signals with the batch of input bits.
     begin
-        IRld = currentStateSignals[44];
-        PCld = currentStateSignals[43];
-        nPCld = currentStateSignals[42];
-        RFld = currentStateSignals[41];
-        MA = currentStateSignals[40];
-        MB = currentStateSignals[39:38];
-        MC = currentStateSignals[37];
-        ME = currentStateSignals[36];
-        MF = currentStateSignals[35];
-        MPA = currentStateSignals[34:33];
-        MP = currentStateSignals[32];
-        MR = currentStateSignals[31];
+        IRld = currentStateSignals[50];
+        PCld = currentStateSignals[49];
+        nPCld = currentStateSignals[48];
+        RFld = currentStateSignals[47];
+        HIld = currentStateSignals[46];
+        LOld = currentStateSignals[45];
+        MA = currentStateSignals[44:43];
+        MB = currentStateSignals[42:41];
+        MC = currentStateSignals[40:39];
+        ME = currentStateSignals[38];
+        MF = currentStateSignals[37];
+        MPA = currentStateSignals[36:35];
+        MPB = currentStateSignals[34];
+        MP = currentStateSignals[33];
+        MR = currentStateSignals[32];
+        MHI = currentStateSignals[31];
         RW = currentStateSignals[30];
         MOV = currentStateSignals[29];
         MDRld = currentStateSignals[28];
