@@ -13,7 +13,7 @@ module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, out_MUXA_o, ou
                 output RW_o, MOV_o, RFld,
                 output[6:0] aState, output [5:0] MUXF_out, output [4:0] MA_o,B_o,
                 input clk, reset, MOC, DMOC, 
-                input [31:0] DataOut, ALU_out);
+                input [31:0] DataOut, output [31:0] ALU_Lo);
                 
 /// Control Unit Declarations.
 /// Required wires
@@ -48,7 +48,7 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     ControlUnit CU( IRld, PCld, nPCld, RFld, MA, MB, MC, ME, MF, MPA, 
                     MP, MR, RW, MOV, MDRld, MARld, OpC, Cin, SSE, OP, 
                     activeState, //Outputting active state for testing purposes
-                    clk, reset, IR, MOC, ALU_out[0], DMOC);
+                    clk, reset, IR, MOC, ALU_Lo[0], DMOC);
 
 /// Ext. Register Declarations.
     
@@ -56,8 +56,8 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     
     wire [4:0] MUXC_out, MUXPA_out;
 
-    //reg [31:0] ALU_out = 32'd0;// Left as Reg for testing purposes for now.
-    wire [31:0] ALU_out;
+    wire [31:0] ALU_Lo;
+    wire [31:0] ALU_Hi;
 
     Registers PC(PC_out, nPC_out, PCld, clk);
     Registers nPC(nPC_out, MUXP_out, nPCld, clk);
@@ -69,9 +69,9 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     nPC_adder npc_adder(nPC_Adder_out, nPC_out);
 
 /// Muxes Declarations.
-    Mux_2x1_32b MUXP(MUXP_out, ALU_out, nPC_Adder_out, MP);
-    Mux_2x1_32b MUXE(MUXE_out, DataOut, ALU_out, ME);
-    Mux_2x1_32b MUXR(MUXR_out, ALU_out, PC_out, MR);
+    Mux_2x1_32b MUXP(MUXP_out, ALU_Lo, nPC_Adder_out, MP);
+    Mux_2x1_32b MUXE(MUXE_out, DataOut, ALU_Lo, ME);
+    Mux_2x1_32b MUXR(MUXR_out, ALU_Lo, PC_out, MR);
 
     Mux_2x1_6b MUXF(MUXF_out, OpC, IR[31:26], MF);
 
@@ -84,24 +84,33 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     wire [31:0] PA_regFile, PB_regFile;
 
     //change RegData for Aluout and wtoReg to MUXC_out after testing
-    RegisterFile registerFile(PA_regFile, PB_regFile, ALU_out, 
+    RegisterFile registerFile(PA_regFile, PB_regFile, ALU_Lo, 
                             MUXPA_out, IR[20:16], MUXC_out, RFld, clk); // shifted IR down to 20:16 - Brian
 
 // ALU Declarations.
     wire [31:0] MUXA_out;
     wire [31:0] MUXB_out;
+    wire [31:0] Hi, Lo;
+    wire [31:0] Hi_out, Lo_out;
     wire [31:0] SE_out;
 
     wire Z_flag, OvrF_flag;
 
+    Registers registerHi(Hi_out, Hi, 1'b0, clk);
+    Registers registerLo(Lo_out, Lo, 1'b0, clk);
+    assign Lo = ALU_Lo;
+
     Sign_Extender SE(SE_out, IR, SSE);
 
-    Mux_2x1_32b MUXA(MUXA_out, PC_out, PA_regFile, MA);
+    // Hardcoded a Zero in MSB of MUX-A select for backwards compatability
+    Mux_4x1_32b MUXA(MUXA_out, PC_out, PA_regFile, Lo_out, Hi_out, {1'b0, MA});
     Mux_4x1_32b MUXB(MUXB_out, MDR_out, PB_regFile, SE_out, 32'b0, MB);
+
+    Mux_2x1_32b MUXHI(Hi, ALU_Hi, ALU_Lo, MHI);
 
 
     // Missing: ALU Sign input, SE case select, TESTING
-    ALU ALU(ALU_out, MUXA_out, MUXB_out, OP, Cin, 1'b0, Z_flag, OvrF_flag);
+    ALU ALU(ALU_Hi, ALU_Lo, MUXA_out, MUXB_out, OP, Cin, 1'b0, Z_flag, OvrF_flag);
 
     // always @(*)begin
     //     $monitor(" %b  %b  %b  %b", MF, MUXF_out, MOV, clk);
