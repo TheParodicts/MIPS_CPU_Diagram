@@ -54,8 +54,8 @@ module DataPath_tb;
 
     // Start the system with a hard Reset for #2 (while the clock ticks, loading CR).
     initial begin      
-        $display("               IR                        MAR        PC         nPC");
-        $monitor("%b %d %d %d", IR, MAR, PC, nPC);
+        $display("               IR                        MAR        PC         nPC    State                ALU");
+        $monitor("%b %d %d %d    %d     %b", IR, MAR, PC, nPC, aState, ALU_out);
         reset = 1'b1;
         #2 reset = 1'b0;
     end
