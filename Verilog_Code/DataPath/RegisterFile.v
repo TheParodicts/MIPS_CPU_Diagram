@@ -161,7 +161,9 @@ module RegisterFile (output [31:0] data_mux_A, data_mux_B,
     Registers R29 (r29, data, dec_enable_reg[29], Clk );
     Registers R30 (r30, data, dec_enable_reg[30], Clk );
     Registers R31 (r31, data, dec_enable_reg[31], Clk );
-    
+    // always @ (r5, r10)begin
+    // $display("%b %d", r5, r10);
+    // end
     endmodule
 
 // ---------------- Modulo de Prueba ------------------------------------
