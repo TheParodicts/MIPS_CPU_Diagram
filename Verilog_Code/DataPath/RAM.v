@@ -147,12 +147,12 @@ module ram512x8 (output reg [31:0] DataOut, output reg MOC, output reg DMOC=1'b0
                 //32bits (word) ADDRESS MUST BE MULTIPLE OF 4
                 6'b101011:
                 begin
-                    $display("Before writing at %b: %b %b %b %b", (Address & wAddress), Mem[(Address & wAddress)],Mem[(Address & wAddress)+1],Mem[(Address & wAddress)+2], Mem[(Address & wAddress)+3]);
+                    // $display("Before writing at %b: %b %b %b %b", (Address & wAddress), Mem[(Address & wAddress)],Mem[(Address & wAddress)+1],Mem[(Address & wAddress)+2], Mem[(Address & wAddress)+3]);
                     Mem[(Address & wAddress)] = DataIn[31:24];
                     Mem[(Address & wAddress)+1]= DataIn[23:16]; 
                     Mem[(Address & wAddress)+2] = DataIn[15:8];
                     Mem[(Address & wAddress)+3]= DataIn[7:0]; 
-                    $display("After writing at %d: %b %b %b %b", (Address & wAddress), Mem[(Address & wAddress)],Mem[(Address & wAddress)+1],Mem[(Address & wAddress)+2], Mem[(Address & wAddress)+3]);
+                    // $display("After writing at %d: %b %b %b %b", (Address & wAddress), Mem[(Address & wAddress)],Mem[(Address & wAddress)+1],Mem[(Address & wAddress)+2], Mem[(Address & wAddress)+3]);
                 end
 
                 //16bits (halfword) ADDRESS MUST BE EVEN.

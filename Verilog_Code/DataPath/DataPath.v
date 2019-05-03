@@ -128,6 +128,6 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     ALU ALU(ALU_Hi, ALU_Lo, MUXA_out, MUXB_out, OP, Cin, 1'b0, Z_flag, OvrF_flag);
 
     // always @(*)begin
-    //     $monitor(" %d  %b  %d  %b", activeState, MUXA_out, MUXB_out, MB);
+    //     $monitor(" %d  %d  %d  %d", activeState, MUXA_out, MUXB_out, ALU_Lo);
     //     end
 endmodule
