@@ -25,13 +25,6 @@ module ALU(
     .overflow(Overflow)
   );
 
-<<<<<<< HEAD
-  assign Lo_out = ALU_Result[31:0];
-  assign Hi_out = ALU_Result[63:32];
-  assign ALU_Out = ALU_Result[31:0];
-  
-=======
->>>>>>> Brian
   assign Zero = ~(|ALU_Result);
   assign ALU_Hi = ALU_Result[63:32];
   assign ALU_Lo = ALU_Result[31:0];
@@ -60,12 +53,6 @@ module ALU(
         4'h4:   // Logical Shift Left
           begin
             tmp = A;
-<<<<<<< HEAD
-            for (i = 0; i < B[4:0]; i=i+1) begin
-              tmp = tmp << 1;
-            end
-            ALU_Result = tmp;
-=======
             if (B < 32) begin
               for (i = 0; i < B[4:0]; i=i+1) begin
                 tmp = tmp << 1;
@@ -74,17 +61,10 @@ module ALU(
             end else begin
               ALU_Result = 0;
             end
->>>>>>> Brian
           end
         4'h5:  // Logical Shift Right
           begin
             tmp = A;
-<<<<<<< HEAD
-            for (i = 0; i < B[4:0]; i=i+1) begin
-              tmp = tmp >> 1;
-            end
-            ALU_Result = tmp;
-=======
             if (B < 32) begin
               for (i = 0; i < B[4:0]; i=i+1) begin
                 tmp = tmp >> 1;
@@ -93,7 +73,6 @@ module ALU(
             end else begin
               ALU_Result = 0;
             end
->>>>>>> Brian
           end
 
         4'h6: // Arith Shift left
@@ -109,11 +88,7 @@ module ALU(
           begin
             tmp = A;
             for (i = 0; i < B[4:0]; i=i+1) begin
-<<<<<<< HEAD
-              tmp = {tmp[31], tmp[31:1]};
-=======
               tmp = {tmp[31], tmp[31:1]}; 
->>>>>>> Brian
             end
             ALU_Result = tmp;
           end       
