@@ -4,6 +4,7 @@
 `include "alu.v"
 `include "Sign_Extender.v"
 
+// Adder Modules used within this file.
 module nPC_adder(output reg [31:0] adder_out, input [31:0] nPC);
     always @ (nPC)
         adder_out <= nPC + 32'd4;
@@ -14,6 +15,7 @@ module IR_adder(output reg [4:0] adder_out, input [4:0] a);
         adder_out <= a + 5'd1;
 endmodule
 
+// Datapath Module
 module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, out_MUXA_o, out_MUXB_o,  
                 output RW_o, MOV_o, RFld,
                 output[6:0] aState, output [5:0] MUXF_out, output [4:0] MA_o,B_o,
@@ -26,8 +28,8 @@ module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, out_MUXA_o, ou
 /// Control Unit Declarations.
 /// Required wires
 // Output wires
-    wire IRld, PCld, nPCld, RFld, HIld, LOld, MPB, ME, MF, MP, MR, MHI,
-            RW, MOV, MDRld, MARld,Cin;        
+    wire IRld, PCld, nPCld, RFld, HIld, LOld, MPB, ME, 
+        MF, MP, MR, MHI, RW, MOV, MDRld, MARld,Cin;        
     wire [1:0]  MA, MC, MPA, MB;
     wire [5:0] OpC;
     wire [1:0] SSE;
@@ -50,20 +52,17 @@ module DataPath(output [31:0] IR_o, MAR_o, PC_o, nPC_o, DataIn_o, out_MUXA_o, ou
     assign MA_o = MUXPA_out; // this output is for testing - att.Sofia
     assign B_o = IR[25:21]; // this output is for testing - att.Sofia
 
+    wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
 
-wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
-/// Control Unit Declaration
+    /// Control Unit Declaration
     ControlUnit CU( IRld, PCld, nPCld, RFld, HIld, LOld, MA, MB, MC, ME, MF, MPA, 
                     MPB, MP, MR, MHI, RW, MOV, MDRld, MARld, OpC, Cin, SSE, OP, 
                     activeState, //Outputting active state for testing purposes
                     clk, reset, IR, MOC, ALU_Lo[0], DMOC);
 
-/// Ext. Register Declarations.
-    
+    /// Ext. Register Declarations.
     wire [31:0] MUXP_out, MUXR_out, MUXE_out;
-    
     wire [4:0] MUXC_out, MUXPA_out, MUXPB_out;
-
     wire [31:0] ALU_Lo;
     wire [31:0] ALU_Hi;
     wire [4:0] RT_adder_out;
@@ -81,20 +80,14 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     Mux_2x1_32b MUXP(MUXP_out, ALU_Lo, nPC_Adder_out, MP);
     Mux_2x1_32b MUXE(MUXE_out, DataOut, ALU_Lo, ME);
     Mux_2x1_32b MUXR(MUXR_out, ALU_Lo, PC_out, MR);
-
     Mux_2x1_6b MUXF(MUXF_out, OpC, IR[31:26], MF);
-
     Mux_4x1_5b MUXC(MUXC_out, IR[15:11], IR[20:16], 5'd31, 5'd0, MC); // Make MC 2 bits.
     Mux_4x1_5b MUXPA(MUXPA_out, IR[20:16], IR[25:21], 5'b0, RT_adder_out, MPA);
     Mux_2x1_5b MUXPB(MUXPB_out,IR[20:16], IR[25:21], MPB); 
 
-    
-
     IR_adder RT_adder(RT_adder_out, IR[20:16]);
-    
-    
-//Register File Declarations.
-    
+     
+    //Register File Declarations. 
     wire [31:0] PA_regFile, PB_regFile;
 
     //change RegData for Aluout and wtoReg to MUXC_out after testing
@@ -107,7 +100,6 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     wire [31:0] Hi, Lo;
     wire [31:0] Hi_out, Lo_out;
     wire [31:0] SE_out;
-
     wire Z_flag, OvrF_flag;
 
     // Hi
@@ -127,6 +119,7 @@ wire [31:0] IR, MAR_out, PC_out, nPC_out, nPC_Adder_out, MDR_out;
     // Missing: ALU Sign input
     ALU ALU(ALU_Hi, ALU_Lo, MUXA_out, MUXB_out, OP, Cin, 1'b0, Z_flag, OvrF_flag);
 
+    // Debug monitor
     // always @(*)begin
     //     $monitor(" %d  %b  %d  %b", activeState, MUXA_out, MUXB_out, ALU_Lo);
     //     end
